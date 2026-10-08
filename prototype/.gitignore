@@ -1,0 +1,9 @@
+# Personal portfolio data and third-party content. Never commit these.
+/snapshots/
+/reports/
+/latest/
+/portfolio.db*
+
+# Python
+__pycache__/
+*.pyc

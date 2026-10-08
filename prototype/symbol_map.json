@@ -1,0 +1,21 @@
+{
+  "_comment": "Maps eToro symbols to TipRanks identifiers. Edit freely - ingest.py reads this file. TipRanks uses 'CC:TICKER' for non-US listings and 'XXXUSD' pairs for crypto.",
+  "MSFT":   {"tipranks": "MSFT",   "asset_class": "stock"},
+  "NVDA":   {"tipranks": "NVDA",   "asset_class": "stock"},
+  "META":   {"tipranks": "META",   "asset_class": "stock"},
+  "NET":    {"tipranks": "NET",    "asset_class": "stock"},
+  "GOOG":   {"tipranks": "GOOG",   "asset_class": "stock"},
+  "IBM":    {"tipranks": "IBM",    "asset_class": "stock"},
+  "AMZN":   {"tipranks": "AMZN",   "asset_class": "stock"},
+  "VOD":    {"tipranks": "VOD",    "asset_class": "stock", "note": "Vodafone ADR (Nasdaq: VOD), priced in USD."},
+  "UBER":   {"tipranks": "UBER",   "asset_class": "stock"},
+  "ABBV":   {"tipranks": "ABBV",   "asset_class": "stock"},
+  "BABA":   {"tipranks": "BABA",   "asset_class": "stock", "note": "Alibaba ADR (NYSE: BABA), priced in USD."},
+  "PYPL":   {"tipranks": "PYPL",   "asset_class": "stock"},
+  "ATROB":  {"tipranks": "ATROB",  "asset_class": "stock", "related": ["ATRO"], "note": "Astronics Class B (OTC). TipRanks has no analyst coverage for ATROB; consensus, price target and ratings live under ATRO (Class A, Nasdaq)."},
+  "SHL.DE": {"tipranks": "DE:SHL", "asset_class": "stock", "note": "Siemens Healthineers, XETRA, priced in EUR."},
+  "ETL.PA": {"tipranks": "FR:ETL", "asset_class": "stock", "note": "Eutelsat, Euronext Paris, priced in EUR. No Smart Score on TipRanks."},
+  "LTC":    {"tipranks": "LTCUSD", "asset_class": "crypto"},
+  "FLR":    {"tipranks": "FLRUSD", "asset_class": "crypto"},
+  "SGB":    {"tipranks": "SGBUSD", "asset_class": "crypto", "confidence": "low", "note": "TipRanks labels SGBUSD 'SubGame', not Songbird. The price is close to eToro's Songbird rate but the asset identity is unverified - treat as indicative only."}
+}
