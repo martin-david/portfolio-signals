@@ -15,7 +15,7 @@ from sec_b import decisions_section                          # noqa: E402
 from sec_c import earnings_section, footer_html, method_section, targets_section, top5_section   # noqa: E402
 
 CONTRACT = """<!--
-THESIS: Answer "hold, watch or review?" before showing any evidence, and give every holding its weight so a verdict on $28 never looks like a decision about $45,000. Refuses the dark KPI-card fintech dashboard.
+THESIS: Answer "hold, watch or review?" before showing any evidence, and give every holding its weight so a verdict on a tiny position never looks like a decision about the largest one. Refuses the dark KPI-card fintech dashboard.
 OWN-WORLD: Instrument-panel report. Cool paper grounds, blue-black ink, Bahnschrift (DIN) for headings and figures, hairline rules. Each signal is a range bar with a shaded supportive zone. Teal, amber and crimson mean hold, watch and review, always with a glyph and a word.
 STORY: The reader learns that analysts back everything that matters, that the open questions are MSFT's size, NET's price and the earnings cluster, then verifies row by row.
 FIRST VIEWPORT: Display-size answer sentence, left-aligned; below it an account-value strip split by verdict with a legend of amounts; sticky nav with Hide amounts and Print at top right.
