@@ -1,0 +1,26 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/docs/">
+    <File Path="docs/architecture.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/PortfolioSignals.Domain/PortfolioSignals.Domain.csproj" />
+    <Project Path="src/PortfolioSignals.Application/PortfolioSignals.Application.csproj" />
+    <Project Path="src/PortfolioSignals.Infrastructure/PortfolioSignals.Infrastructure.csproj" />
+    <Project Path="src/PortfolioSignals.Api/PortfolioSignals.Api.csproj" />
+    <Project Path="src/PortfolioSignals.Functions/PortfolioSignals.Functions.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PortfolioSignals.TestSupport/PortfolioSignals.TestSupport.csproj" />
+    <Project Path="tests/PortfolioSignals.Domain.Tests/PortfolioSignals.Domain.Tests.csproj" />
+    <Project Path="tests/PortfolioSignals.Application.Tests/PortfolioSignals.Application.Tests.csproj" />
+    <Project Path="tests/PortfolioSignals.Infrastructure.Tests/PortfolioSignals.Infrastructure.Tests.csproj" />
+    <Project Path="tests/PortfolioSignals.Api.Tests/PortfolioSignals.Api.Tests.csproj" />
+  </Folder>
+</Solution>

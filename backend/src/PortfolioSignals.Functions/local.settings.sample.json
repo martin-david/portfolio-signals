@@ -1,0 +1,14 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "SyncQueueStorage": "UseDevelopmentStorage=true",
+    "SyncScheduler:Schedule": "0 */15 * * * *",
+    "SyncQueue:QueueName": "sync-requests",
+    "SyncQueue:ConnectionString": "UseDevelopmentStorage=true",
+    "Cosmos:ConnectionString": "<cosmos emulator or account connection string>",
+    "Cosmos:CreateIfNotExists": "true",
+    "CredentialStore:KeyVaultUri": "https://<your-vault>.vault.azure.net/"
+  }
+}

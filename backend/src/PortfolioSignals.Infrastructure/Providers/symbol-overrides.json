@@ -1,0 +1,18 @@
+[
+  {
+    "etoroSymbol": "ATROB",
+    "tipRanksTicker": "ATROB",
+    "assetClass": "Stock",
+    "relatedTickers": [ "ATRO" ],
+    "note": "Astronics Class B (OTC). TipRanks has no analyst coverage for ATROB; consensus, price target and ratings live under ATRO (Class A, Nasdaq).",
+    "lowConfidence": false
+  },
+  {
+    "etoroSymbol": "SGB",
+    "tipRanksTicker": "SGBUSD",
+    "assetClass": "Crypto",
+    "relatedTickers": [],
+    "note": "TipRanks labels SGBUSD 'SubGame', not Songbird. The price is close to eToro's Songbird rate but the asset identity is unverified; treat as indicative only.",
+    "lowConfidence": true
+  }
+]

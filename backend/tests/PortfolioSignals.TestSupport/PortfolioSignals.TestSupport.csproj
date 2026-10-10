@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Shared in-memory fakes and test data builders for the test projects. Not a test project itself. -->
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PortfolioSignals.Application\PortfolioSignals.Application.csproj" />
+  </ItemGroup>
+
+</Project>
