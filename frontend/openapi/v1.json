@@ -1,0 +1,2127 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "Portfolio Signals API",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5196/"
+    }
+  ],
+  "paths": {
+    "/api/v1/me": {
+      "get": {
+        "tags": [
+          "Me"
+        ],
+        "operationId": "Me_Get",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Me"
+        ],
+        "operationId": "Me_Put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations": {
+      "get": {
+        "tags": [
+          "Integrations"
+        ],
+        "operationId": "Integrations_List",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IntegrationDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IntegrationDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IntegrationDto"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/{provider}": {
+      "put": {
+        "tags": [
+          "Integrations"
+        ],
+        "operationId": "Integrations_Connect",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/IntegrationProvider"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectProviderRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectProviderRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectProviderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Integrations"
+        ],
+        "operationId": "Integrations_Disconnect",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/IntegrationProvider"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sync": {
+      "post": {
+        "tags": [
+          "Sync"
+        ],
+        "operationId": "Sync_RequestSync",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RequestSyncRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RequestSyncRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RequestSyncRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SyncRunDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SyncRunDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SyncRunDto"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sync/runs": {
+      "get": {
+        "tags": [
+          "Sync"
+        ],
+        "operationId": "Sync_Runs",
+        "parameters": [
+          {
+            "name": "take",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SyncRunDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SyncRunDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SyncRunDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/portfolio": {
+      "get": {
+        "tags": [
+          "Portfolio"
+        ],
+        "operationId": "Portfolio_Latest",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortfolioDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortfolioDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortfolioDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/portfolio/snapshots": {
+      "get": {
+        "tags": [
+          "Portfolio"
+        ],
+        "operationId": "Portfolio_Snapshots",
+        "parameters": [
+          {
+            "name": "take",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PortfolioSnapshotSummaryDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PortfolioSnapshotSummaryDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PortfolioSnapshotSummaryDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/portfolio/analysis": {
+      "get": {
+        "tags": [
+          "Portfolio"
+        ],
+        "operationId": "Portfolio_Analysis",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortfolioAnalysisDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortfolioAnalysisDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortfolioAnalysisDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/portfolio/holdings/{symbol}": {
+      "get": {
+        "tags": [
+          "Portfolio"
+        ],
+        "operationId": "Portfolio_Holding",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/HoldingDetailDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HoldingDetailDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HoldingDetailDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccountSummary": {
+        "required": [
+          "currency",
+          "totalValue",
+          "directValue",
+          "copiedValue",
+          "availableCash",
+          "unrealizedPnl",
+          "usedMargin"
+        ],
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string"
+          },
+          "totalValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "directValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "copiedValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "availableCash": {
+            "type": "number",
+            "format": "double"
+          },
+          "unrealizedPnl": {
+            "type": "number",
+            "format": "double"
+          },
+          "usedMargin": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "AiAnalysis": {
+        "required": [
+          "score",
+          "rating",
+          "priceTarget",
+          "upsidePct",
+          "asOf"
+        ],
+        "type": "object",
+        "properties": {
+          "score": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "rating": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "priceTarget": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "upsidePct": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "asOf": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          }
+        }
+      },
+      "AnalystBreadth": {
+        "required": [
+          "analysts",
+          "buy",
+          "hold",
+          "sell",
+          "withPriceTarget",
+          "priceTargetMin",
+          "priceTargetMedian",
+          "priceTargetMax"
+        ],
+        "type": "object",
+        "properties": {
+          "analysts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "buy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hold": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sell": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "withPriceTarget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "priceTargetMin": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "priceTargetMedian": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "priceTargetMax": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          }
+        }
+      },
+      "AnalystConsensus": {
+        "enum": [
+          "StrongSell",
+          "Sell",
+          "Neutral",
+          "Buy",
+          "StrongBuy",
+          null
+        ]
+      },
+      "AnalyzedHoldingDto": {
+        "required": [
+          "holding",
+          "assessment"
+        ],
+        "type": "object",
+        "properties": {
+          "holding": {
+            "$ref": "#/components/schemas/HoldingDto"
+          },
+          "assessment": {
+            "$ref": "#/components/schemas/HoldingAssessment"
+          }
+        }
+      },
+      "AssessmentFacts": {
+        "required": [
+          "consensus",
+          "priceTarget",
+          "lastPrice",
+          "currency",
+          "streetUpsidePct",
+          "smartScore",
+          "aiScore",
+          "aiUpsidePct",
+          "nextEarningsDate",
+          "daysToEarnings",
+          "analystCount"
+        ],
+        "type": "object",
+        "properties": {
+          "consensus": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AnalystConsensus"
+              }
+            ]
+          },
+          "priceTarget": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "lastPrice": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "currency": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "streetUpsidePct": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "smartScore": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          },
+          "aiScore": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "aiUpsidePct": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "nextEarningsDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "daysToEarnings": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          },
+          "analystCount": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "AssessmentFlag": {
+        "required": [
+          "key",
+          "severity",
+          "title",
+          "detail"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/FlagSeverity"
+          },
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      },
+      "AssetClass": {
+        "enum": [
+          "Stock",
+          "Etf",
+          "Crypto",
+          "Other"
+        ]
+      },
+      "ConnectProviderRequest": {
+        "required": [
+          "credentials"
+        ],
+        "type": "object",
+        "properties": {
+          "credentials": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ConnectionStatus": {
+        "enum": [
+          "Active",
+          "CredentialsRejected",
+          "Disconnected",
+          null
+        ]
+      },
+      "CopiedTrader": {
+        "required": [
+          "mirrorId",
+          "invested",
+          "value",
+          "openPnl",
+          "openPnlPct",
+          "closedPnl",
+          "availableCash",
+          "valuePct",
+          "stopLossPct"
+        ],
+        "type": "object",
+        "properties": {
+          "mirrorId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "invested": {
+            "type": "number",
+            "format": "double"
+          },
+          "value": {
+            "type": "number",
+            "format": "double"
+          },
+          "openPnl": {
+            "type": "number",
+            "format": "double"
+          },
+          "openPnlPct": {
+            "type": "number",
+            "format": "double"
+          },
+          "closedPnl": {
+            "type": "number",
+            "format": "double"
+          },
+          "availableCash": {
+            "type": "number",
+            "format": "double"
+          },
+          "valuePct": {
+            "type": "number",
+            "format": "double"
+          },
+          "stopLossPct": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "FlagSeverity": {
+        "enum": [
+          "Info",
+          "Warn",
+          "Alert"
+        ]
+      },
+      "HoldingAssessment": {
+        "required": [
+          "symbol",
+          "tipRanksTicker",
+          "weightPct",
+          "material",
+          "components",
+          "composite",
+          "tier",
+          "verdict",
+          "facts",
+          "flags",
+          "viaTicker"
+        ],
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "tipRanksTicker": {
+            "type": "string"
+          },
+          "weightPct": {
+            "type": "number",
+            "format": "double"
+          },
+          "material": {
+            "type": "boolean"
+          },
+          "components": {
+            "$ref": "#/components/schemas/SignalComponents"
+          },
+          "composite": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          },
+          "tier": {
+            "$ref": "#/components/schemas/Tier"
+          },
+          "verdict": {
+            "$ref": "#/components/schemas/Verdict"
+          },
+          "facts": {
+            "$ref": "#/components/schemas/AssessmentFacts"
+          },
+          "flags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssessmentFlag"
+            }
+          },
+          "viaTicker": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "HoldingDetailDto": {
+        "required": [
+          "analysis",
+          "signals",
+          "signalsFetchedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "analysis": {
+            "$ref": "#/components/schemas/AnalyzedHoldingDto"
+          },
+          "signals": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/SignalData"
+              }
+            ]
+          },
+          "signalsFetchedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "HoldingDto": {
+        "required": [
+          "instrumentId",
+          "symbol",
+          "name",
+          "assetClass",
+          "tipRanksTicker",
+          "invested",
+          "value",
+          "weightPct",
+          "pnl",
+          "pnlPct",
+          "units",
+          "avgOpenRate",
+          "avgLeverage"
+        ],
+        "type": "object",
+        "properties": {
+          "instrumentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "assetClass": {
+            "$ref": "#/components/schemas/AssetClass"
+          },
+          "tipRanksTicker": {
+            "type": "string"
+          },
+          "invested": {
+            "type": "number",
+            "format": "double"
+          },
+          "value": {
+            "type": "number",
+            "format": "double"
+          },
+          "weightPct": {
+            "type": "number",
+            "format": "double"
+          },
+          "pnl": {
+            "type": "number",
+            "format": "double"
+          },
+          "pnlPct": {
+            "type": "number",
+            "format": "double"
+          },
+          "units": {
+            "type": "number",
+            "format": "double"
+          },
+          "avgOpenRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "avgLeverage": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "IntegrationDto": {
+        "required": [
+          "provider",
+          "status",
+          "syncIntervalMinutes",
+          "connectedAt",
+          "lastAttemptAt",
+          "lastSuccessfulSyncAt",
+          "nextSyncDueAt",
+          "lastFailure",
+          "requiredCredentialFields"
+        ],
+        "type": "object",
+        "properties": {
+          "provider": {
+            "$ref": "#/components/schemas/IntegrationProvider"
+          },
+          "status": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ConnectionStatus"
+              }
+            ]
+          },
+          "syncIntervalMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "connectedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "lastAttemptAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "lastSuccessfulSyncAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "nextSyncDueAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "lastFailure": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/SyncFailure"
+              }
+            ]
+          },
+          "requiredCredentialFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IntegrationProvider": {
+        "enum": [
+          "Etoro",
+          "TipRanks"
+        ]
+      },
+      "PortfolioAnalysisDto": {
+        "required": [
+          "snapshotId",
+          "asOf",
+          "signalsFetchedAt",
+          "kpis",
+          "holdings",
+          "disclaimer"
+        ],
+        "type": "object",
+        "properties": {
+          "snapshotId": {
+            "type": "string"
+          },
+          "asOf": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "signalsFetchedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "kpis": {
+            "$ref": "#/components/schemas/PortfolioKpis"
+          },
+          "holdings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AnalyzedHoldingDto"
+            }
+          },
+          "disclaimer": {
+            "type": "string"
+          }
+        }
+      },
+      "PortfolioDto": {
+        "required": [
+          "snapshotId",
+          "takenAt",
+          "lastSuccessfulSyncAt",
+          "account",
+          "holdings",
+          "copiedTraders"
+        ],
+        "type": "object",
+        "properties": {
+          "snapshotId": {
+            "type": "string"
+          },
+          "takenAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastSuccessfulSyncAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "account": {
+            "$ref": "#/components/schemas/AccountSummary"
+          },
+          "holdings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HoldingDto"
+            }
+          },
+          "copiedTraders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CopiedTrader"
+            }
+          }
+        }
+      },
+      "PortfolioKpis": {
+        "required": [
+          "totalValue",
+          "directValue",
+          "unrealizedPnl",
+          "positions",
+          "top1Pct",
+          "top5Pct",
+          "effectivePositions",
+          "weightedSmartScore",
+          "weightedStreetUpsidePct",
+          "earnings30DaysPct",
+          "earnings30DaysSymbols",
+          "smallPositions",
+          "verdictCounts"
+        ],
+        "type": "object",
+        "properties": {
+          "totalValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "directValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "unrealizedPnl": {
+            "type": "number",
+            "format": "double"
+          },
+          "positions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "top1Pct": {
+            "type": "number",
+            "format": "double"
+          },
+          "top5Pct": {
+            "type": "number",
+            "format": "double"
+          },
+          "effectivePositions": {
+            "type": "number",
+            "format": "double"
+          },
+          "weightedSmartScore": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "weightedStreetUpsidePct": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "earnings30DaysPct": {
+            "type": "number",
+            "format": "double"
+          },
+          "earnings30DaysSymbols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "smallPositions": {
+            "$ref": "#/components/schemas/SmallPositions"
+          },
+          "verdictCounts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "PortfolioSnapshotSummaryDto": {
+        "required": [
+          "snapshotId",
+          "takenAt",
+          "totalValue",
+          "positions"
+        ],
+        "type": "object",
+        "properties": {
+          "snapshotId": {
+            "type": "string"
+          },
+          "takenAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "positions": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "instance": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "RequestSyncRequest": {
+        "required": [
+          "provider"
+        ],
+        "type": "object",
+        "properties": {
+          "provider": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/IntegrationProvider"
+              }
+            ]
+          }
+        }
+      },
+      "SignalComponents": {
+        "required": [
+          "consensus",
+          "upside",
+          "smartScore",
+          "aiScore",
+          "technicals",
+          "breadth"
+        ],
+        "type": "object",
+        "properties": {
+          "consensus": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "upside": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "smartScore": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "aiScore": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "technicals": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "breadth": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          }
+        }
+      },
+      "SignalData": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "sector": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "consensus": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AnalystConsensus"
+              }
+            ]
+          },
+          "bestAnalystConsensus": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AnalystConsensus"
+              }
+            ]
+          },
+          "priceTarget": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "lastPrice": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "currency": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "smartScore": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          },
+          "peRatio": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "dividendYieldPct": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "newsSentiment": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "hedgeFundsScore": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "insiderScore": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "ytdGainPct": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "yearlyGainPct": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "nextEarningsDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "ai": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AiAnalysis"
+              }
+            ]
+          },
+          "breadth": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AnalystBreadth"
+              }
+            ]
+          },
+          "technicalDay": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AnalystConsensus"
+              }
+            ]
+          },
+          "technicalWeek": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AnalystConsensus"
+              }
+            ]
+          }
+        }
+      },
+      "SmallPositions": {
+        "required": [
+          "count",
+          "value",
+          "pct"
+        ],
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "value": {
+            "type": "number",
+            "format": "double"
+          },
+          "pct": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "SubscriptionPlan": {
+        "enum": [
+          "Free",
+          "Essential",
+          "Pro",
+          "Premium"
+        ]
+      },
+      "SyncFailure": {
+        "required": [
+          "kind",
+          "message",
+          "at"
+        ],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/SyncFailureKind"
+          },
+          "message": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SyncFailureKind": {
+        "enum": [
+          "Unauthorized",
+          "RateLimited",
+          "Unavailable",
+          "InvalidResponse",
+          "Unknown"
+        ]
+      },
+      "SyncRunDto": {
+        "required": [
+          "id",
+          "provider",
+          "trigger",
+          "status",
+          "requestedAt",
+          "startedAt",
+          "completedAt",
+          "itemsProcessed",
+          "failure",
+          "skipReason"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "$ref": "#/components/schemas/IntegrationProvider"
+          },
+          "trigger": {
+            "$ref": "#/components/schemas/SyncTrigger"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SyncRunStatus"
+          },
+          "requestedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "startedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "itemsProcessed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failure": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/SyncFailure"
+              }
+            ]
+          },
+          "skipReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "SyncRunStatus": {
+        "enum": [
+          "Queued",
+          "Running",
+          "Succeeded",
+          "Failed",
+          "Skipped"
+        ]
+      },
+      "SyncTrigger": {
+        "enum": [
+          "Scheduled",
+          "Manual"
+        ]
+      },
+      "Tier": {
+        "enum": [
+          "NoData",
+          "Weak",
+          "Mixed",
+          "Supported",
+          "Strong"
+        ]
+      },
+      "UpdateProfileRequest": {
+        "required": [
+          "displayName",
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "email": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "UserProfileDto": {
+        "required": [
+          "id",
+          "email",
+          "displayName",
+          "plan",
+          "etoroSyncIntervalMinutes",
+          "tipRanksSyncIntervalMinutes",
+          "allowsManualSync",
+          "registeredAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/SubscriptionPlan"
+          },
+          "etoroSyncIntervalMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tipRanksSyncIntervalMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "allowsManualSync": {
+            "type": "boolean"
+          },
+          "registeredAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "instance": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Verdict": {
+        "enum": [
+          "Hold",
+          "HoldReviewSize",
+          "Watch",
+          "Review",
+          "NoData"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "DevUser": {
+        "type": "apiKey",
+        "description": "Development only: any user name, for example 'alice'.",
+        "name": "X-Dev-User",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "DevUser": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Me"
+    },
+    {
+      "name": "Integrations"
+    },
+    {
+      "name": "Sync"
+    },
+    {
+      "name": "Portfolio"
+    }
+  ]
+}
