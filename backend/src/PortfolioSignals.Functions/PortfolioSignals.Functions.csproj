@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="local.settings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PortfolioSignals.Application\PortfolioSignals.Application.csproj" />
     <ProjectReference Include="..\PortfolioSignals.Infrastructure\PortfolioSignals.Infrastructure.csproj" />
   </ItemGroup>

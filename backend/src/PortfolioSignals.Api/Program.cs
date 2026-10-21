@@ -3,6 +3,8 @@ using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.OpenApi;
 using PortfolioSignals.Api.Infrastructure;
 using PortfolioSignals.Application;
 using PortfolioSignals.Infrastructure;
@@ -34,7 +36,51 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer((document, _, _) =>
+    {
+        document.Info.Title = "Portfolio Signals API";
+        document.Info.Version = "v1";
+
+        var schemeName = developmentAuth ? "DevUser" : "Bearer";
+        IOpenApiSecurityScheme scheme = developmentAuth
+            ? new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.ApiKey,
+                In = ParameterLocation.Header,
+                Name = DevelopmentAuthenticationHandler.HeaderName,
+                Description = "Development only: any user name, for example 'alice'.",
+            }
+            : new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+            };
+
+        document.Components ??= new OpenApiComponents();
+        document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+        document.Components.SecuritySchemes[schemeName] = scheme;
+        document.Security ??= [];
+        document.Security.Add(new OpenApiSecurityRequirement
+        {
+            [new OpenApiSecuritySchemeReference(schemeName, document)] = [],
+        });
+        return Task.CompletedTask;
+    });
+
+    // Stable "Controller_Action" operation ids let NSwag generate one client class per controller.
+    options.AddOperationTransformer((operation, context, _) =>
+    {
+        if (context.Description.ActionDescriptor is ControllerActionDescriptor action)
+        {
+            operation.OperationId = $"{action.ControllerName}_{action.ActionName}";
+        }
+
+        return Task.CompletedTask;
+    });
+});
 
 if (developmentAuth)
 {
@@ -77,6 +123,11 @@ app.UseExceptionHandler();
 app.UseStatusCodePages();
 app.UseHttpsRedirection();
 app.UseCors();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/openapi/v1.json", "Portfolio Signals API v1");
+    options.RoutePrefix = "swagger";
+});
 app.UseAuthentication();
 app.UseAuthorization();
 
