@@ -1,0 +1,22 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+TestResults/
+*.log
+publish/
+
+# Local settings and secrets (never commit)
+local.settings.json
+appsettings.*.local.json
+*.pfx
+.env
+
+# Azurite local storage emulator
+__azurite_db_*.json
+__blobstorage__/
+__queuestorage__/
+__tablestorage__/
+AzuriteConfig

@@ -2,7 +2,7 @@
 
 Analysts back every position that matters. What is left to decide is size and price.
 
-> **Project direction:** This repository currently contains the project overview. The capabilities and architecture below describe the planned product; they are not claims about features already implemented.
+> **Project direction:** The product capabilities below are planned, not claims about finished features. The repository holds the Python [prototype](prototype/README.md) that validated the idea and the first cut of the [.NET backend](backend/README.md): a REST API and background sync that connect eToro and TipRanks, store snapshots and score holdings. There is no frontend yet.
 
 ## Product overview
 
@@ -37,13 +37,17 @@ Plans will control synchronization frequency and feature access. The application
 
 ### Backend
 
-- **Platform:** .NET 10 LTS and C# 14.
-- **Architecture:** Clean Architecture and domain-driven design, with SOLID and DRY practices. Prefer a modular monolith initially; consider microservices only when deployment, scaling, or team boundaries justify their operational cost.
-- **Application flow:** CQRS using an open-source MediatR fork. Keep controllers small: validate HTTP input, dispatch application requests, and map results to appropriate HTTP responses.
-- **API:** Controller-based REST API using standard HTTP semantics, authentication, authorization, and documented error responses. Publish an OpenAPI specification and generate the TypeScript client with NSwag or a compatible alternative.
-- **Validation and operations:** FluentValidation, dependency injection through `Microsoft.Extensions.DependencyInjection`, feature flags, structured observability (logs, metrics, and traces), and unit-testable application services.
-- **Data:** Evaluate Azure Cosmos DB for NoSQL portfolio and application data. Use the EF Core Cosmos provider only where its capabilities fit; EF Core is not a universal abstraction for Cosmos DB or Azure Table Storage. Choose Table Storage only if its simpler query and data-model constraints meet the requirements.
-- **Integrations:** Isolate eToro and TipRanks API/MCP access behind application-owned interfaces and adapters. Handle provider failures, quotas, retries, and synchronization idempotently.
+The backend lives in [backend/](backend/README.md) (solution [PortfolioSignals.slnx](backend/PortfolioSignals.slnx)); [architecture and domain model](backend/docs/architecture.md) explain the decisions below.
+
+- **Platform:** .NET 10 LTS and C# 14, with all package versions managed centrally in `Directory.Packages.props`.
+- **Architecture:** Clean Architecture and domain-driven design, with SOLID and DRY practices. A modular monolith: `Domain`, `Application`, `Infrastructure`, an `Api` host and an Azure Functions host for background work. Consider microservices only when deployment, scaling, or team boundaries justify their operational cost.
+- **Domain:** Aggregates are `UserAccount`, `ProviderConnection`, `SyncRun`, `PortfolioSnapshot` and `InstrumentSignals`. The hold/watch/review scoring from the prototype is a domain service.
+- **Application flow:** CQRS using [FreeMediator](https://github.com/steffenskov/FreeMediator), an MIT-licensed MediatR-compatible library (MediatR itself went commercial). Controllers stay small: validate HTTP input, dispatch application requests, and map results to appropriate HTTP responses.
+- **API:** Controller-based REST API under `/api/v1` using standard HTTP semantics, JWT authentication from an OpenID Connect provider, and RFC 9457 problem responses. The OpenAPI document is published at `/openapi/v1.json`; generating the TypeScript client with NSwag or a compatible alternative is still to do.
+- **Validation and operations:** FluentValidation, dependency injection through `Microsoft.Extensions.DependencyInjection`, and OpenTelemetry export to Azure Monitor when configured. Feature flags and dependency health checks are not in place yet.
+- **Data:** Azure Cosmos DB for NoSQL through the Cosmos SDK, in two containers partitioned by user. EF Core is not used; Table Storage was not needed.
+- **Background sync:** Azure Functions (isolated worker). A timer finds connections that are due under the user's plan and queues one message per sync; a queue-triggered function runs it with retries, backoff and idempotency.
+- **Integrations:** eToro (public API) and TipRanks (MCP server) sit behind application-owned interfaces and adapters, called with each user's own credentials. Failures, quotas and retries are classified so a rate limit backs off the connection instead of burning quota.
 
 ### Frontend
 
