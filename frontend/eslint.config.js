@@ -21,7 +21,12 @@ module.exports = defineConfig([
     // The mock API is a development and test tool: production code reaches it only through the client factory,
     // which loads it with a dynamic import when EXPO_PUBLIC_API_MODE=mock.
     files: ['src/**/*.{ts,tsx}'],
-    ignores: ['src/mocks/**', 'src/api/createApiClient.ts', 'src/**/*.test.{ts,tsx}'],
+    ignores: [
+      'src/mocks/**',
+      'src/test/**',
+      'src/api/createApiClient.ts',
+      'src/**/*.test.{ts,tsx}',
+    ],
     rules: {
       'no-restricted-imports': [
         'error',
