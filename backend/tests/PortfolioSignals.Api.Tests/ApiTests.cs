@@ -101,6 +101,88 @@ public sealed class ApiTests : IClassFixture<ApiFactory>
         paths.Should().Contain(["/api/v1/me", "/api/v1/integrations/{provider}", "/api/v1/sync", "/api/v1/portfolio/analysis", "/api/v1/portfolio/holdings/{symbol}"]);
     }
 
+    /// <summary>The frontend client is generated from this document, so it has to describe what the API really sends.</summary>
+    [Fact]
+    public async Task The_openapi_document_describes_enums_as_strings_and_numbers_as_numbers()
+    {
+        var document = await JsonAsync(await _factory.CreateClient().GetAsync("/openapi/v1.json"));
+        var schemas = document.GetProperty("components").GetProperty("schemas");
+
+        foreach (var schema in schemas.EnumerateObject())
+        {
+            var isObject = schema.Value.TryGetProperty("properties", out _);
+            var isEnum = schema.Value.TryGetProperty("enum", out var values);
+            (isObject || isEnum).Should().BeTrue($"{schema.Name} must be an object or an enum, not a bare integer");
+            if (isEnum)
+            {
+                // A nullable enum used elsewhere also lists null among the members of the shared schema.
+                values.EnumerateArray().Where(v => v.ValueKind != JsonValueKind.Null).Should().OnlyContain(v => v.ValueKind == JsonValueKind.String, schema.Name);
+            }
+        }
+
+        schemas.GetProperty("Verdict").GetProperty("enum").EnumerateArray().Select(v => v.GetString())
+            .Should().Equal("Hold", "HoldReviewSize", "Watch", "Review", "NoData");
+        schemas.GetProperty("IntegrationProvider").GetProperty("enum").EnumerateArray().Select(v => v.GetString())
+            .Should().Equal("Etoro", "TipRanks");
+
+        var numbersDocumentedAsStrings = Walk(schemas)
+            .Where(e => e.ValueKind == JsonValueKind.Object && e.TryGetProperty("type", out var type) && type.ValueKind == JsonValueKind.Array)
+            .Where(e => e.GetProperty("type").EnumerateArray().Select(t => t.GetString()).Contains("string")
+                && e.GetProperty("type").EnumerateArray().Select(t => t.GetString()).Any(t => t is "integer" or "number"))
+            .ToList();
+        numbersDocumentedAsStrings.Should().BeEmpty("numbers are written as JSON numbers");
+    }
+
+    [Fact]
+    public async Task Properties_the_document_lists_as_required_are_always_present_even_when_null()
+    {
+        var client = _factory.ClientFor("oscar");
+        await RegisterAsync(client);
+
+        var document = await JsonAsync(await client.GetAsync("/openapi/v1.json"));
+        var schemas = document.GetProperty("components").GetProperty("schemas");
+        var integrations = await JsonAsync(await client.GetAsync("/api/v1/integrations"));
+        var profile = await JsonAsync(await client.GetAsync("/api/v1/me"));
+
+        var integration = integrations.EnumerateArray().First();
+        RequiredNames(schemas, "IntegrationDto").Should().Contain("lastFailure").And.Contain("nextSyncDueAt");
+        integration.EnumerateObject().Select(p => p.Name).Should().Contain(RequiredNames(schemas, "IntegrationDto"));
+        integration.GetProperty("status").ValueKind.Should().Be(JsonValueKind.Null);
+        integration.GetProperty("lastFailure").ValueKind.Should().Be(JsonValueKind.Null);
+        profile.EnumerateObject().Select(p => p.Name).Should().Contain(RequiredNames(schemas, "UserProfileDto"));
+    }
+
+    private static IEnumerable<string> RequiredNames(JsonElement schemas, string schema)
+        => schemas.GetProperty(schema).GetProperty("required").EnumerateArray().Select(n => n.GetString()!).ToList();
+
+    private static IEnumerable<JsonElement> Walk(JsonElement element)
+    {
+        yield return element;
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.Object:
+                foreach (var property in element.EnumerateObject())
+                {
+                    foreach (var child in Walk(property.Value))
+                    {
+                        yield return child;
+                    }
+                }
+
+                break;
+            case JsonValueKind.Array:
+                foreach (var item in element.EnumerateArray())
+                {
+                    foreach (var child in Walk(item))
+                    {
+                        yield return child;
+                    }
+                }
+
+                break;
+        }
+    }
+
     [Fact]
     public async Task An_unregistered_user_gets_a_problem_details_404()
     {
@@ -199,6 +281,9 @@ public sealed class ApiTests : IClassFixture<ApiFactory>
         analysis.GetProperty("holdings").GetArrayLength().Should().Be(3);
         analysis.GetProperty("disclaimer").GetString().Should().Contain("not investment advice");
         analysis.GetProperty("kpis").GetProperty("positions").GetInt32().Should().Be(3);
+        analysis.GetProperty("kpis").GetProperty("verdictCounts").EnumerateObject().Select(p => p.Name)
+            .Should().BeEquivalentTo("Hold", "HoldReviewSize", "Watch", "Review", "NoData");
+        analysis.GetProperty("holdings")[0].GetProperty("assessment").GetProperty("verdict").ValueKind.Should().Be(JsonValueKind.String);
 
         var detail = await client.GetAsync("/api/v1/portfolio/holdings/MSFT");
         detail.StatusCode.Should().Be(HttpStatusCode.OK);
