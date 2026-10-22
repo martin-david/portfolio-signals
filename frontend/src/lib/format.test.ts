@@ -4,6 +4,7 @@ import {
   describeInterval,
   formatDate,
   formatDateTime,
+  formatDayLabel,
   formatMoney,
   formatNumber,
   formatPercent,
@@ -90,6 +91,8 @@ describe('dates', () => {
   it('formats in UTC', () => {
     expect(formatDate('2026-09-30T23:30:00Z')).toBe('30 Sep 2026');
     expect(formatShortDate('2026-10-05')).toBe('Oct 5');
+    expect(formatDayLabel('2026-11-04')).toBe('Wed Nov 4');
+    expect(formatDayLabel('2026-11-08T23:59:00Z')).toBe('Sun Nov 8');
     expect(formatDateTime('2026-09-30T20:36:12Z')).toBe('30 Sep 2026, 20:36 UTC');
     expect(formatDateTime('2026-01-02T03:04:00+02:00')).toBe('2 Jan 2026, 01:04 UTC');
   });
@@ -98,6 +101,7 @@ describe('dates', () => {
     for (const value of [null, undefined, '', 'not a date']) {
       expect(formatDate(value)).toBe('\u2013');
       expect(formatShortDate(value)).toBe('\u2013');
+      expect(formatDayLabel(value)).toBe('\u2013');
       expect(formatDateTime(value)).toBe('\u2013');
       expect(formatRelative(value, new Date())).toBe('\u2013');
     }

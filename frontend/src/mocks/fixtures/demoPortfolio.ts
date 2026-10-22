@@ -25,6 +25,16 @@ function inDays(now: Date, days: number): string {
   return new Date(now.getTime() + days * DAY).toISOString().slice(0, 10);
 }
 
+/**
+ * A reporting day: companies do not report at weekends, so a date that falls on one moves back to the Friday before.
+ * Moving back keeps each holding on its side of the 30-day and 70-day lines that the demo's findings are built on.
+ */
+function reportingDay(now: Date, days: number): string {
+  const weekday = new Date(now.getTime() + days * DAY).getUTCDay();
+  const back = weekday === 6 ? 1 : weekday === 0 ? 2 : 0;
+  return inDays(now, days - back);
+}
+
 function breadth(
   analysts: number,
   buy: number,
@@ -67,7 +77,7 @@ type Spec = {
 const CASH = 5300;
 
 export function createDemoData(now: Date, drift = 0): DemoData {
-  const d = (days: number) => inDays(now, days);
+  const d = (days: number) => reportingDay(now, days);
   const scale = 1 + drift;
 
   const specs: Spec[] = [

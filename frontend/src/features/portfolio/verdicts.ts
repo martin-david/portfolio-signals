@@ -1,4 +1,5 @@
 import type { AnalystConsensus, FlagSeverity, Tier, Verdict } from '@/api/schema';
+import type { StatusTone } from '@/ui/StatusLabel';
 import type { VerdictKey } from '@/ui/tokens';
 
 export type ChipKind = 'hold' | 'watch' | 'review' | 'nodata';
@@ -97,12 +98,20 @@ export function tierLabel(tier: Tier): string {
   return tierLabels[tier];
 }
 
-const severityLabels: Record<FlagSeverity, string> = {
-  Info: 'Info',
-  Warn: 'Warning',
-  Alert: 'Alert',
+export interface SeverityMeta {
+  label: string;
+  tone: StatusTone;
+  icon: string;
+  /** Position when flags are listed, most serious first. */
+  rank: number;
+}
+
+export const severityMeta: Record<FlagSeverity, SeverityMeta> = {
+  Alert: { label: 'Alert', tone: 'danger', icon: 'alert-circle-outline', rank: 0 },
+  Warn: { label: 'Warning', tone: 'warning', icon: 'alert-outline', rank: 1 },
+  Info: { label: 'Info', tone: 'neutral', icon: 'information-outline', rank: 2 },
 };
 
 export function severityLabel(severity: FlagSeverity): string {
-  return severityLabels[severity];
+  return severityMeta[severity].label;
 }

@@ -3,6 +3,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { renderUi } from '@/test/renderUi';
 
 import { Button } from './Button';
+import { Icon } from './Icon';
 import { Notice } from './Notice';
 import { TextField } from './TextField';
 
@@ -68,6 +69,18 @@ describe('Notice', () => {
     await renderUi(<Notice tone="danger" title="eToro rejected your credentials" />);
 
     expect(screen.getByRole('alert')).toBeOnTheScreen();
+  });
+});
+
+describe('Icon', () => {
+  it('is hidden from assistive technology, so a state is carried by its word', async () => {
+    await renderUi(<Icon name="alert-outline" color="#000000" testID="glyph" />);
+
+    expect(screen.queryByTestId('glyph')).toBeNull();
+    expect(screen.getByTestId('glyph', { includeHiddenElements: true })).toHaveProp(
+      'aria-hidden',
+      true,
+    );
   });
 });
 

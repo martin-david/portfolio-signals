@@ -7,6 +7,7 @@ export const MINUS = '\u2212';
 const MISSING = '\u2013';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
   USD: '$',
@@ -138,6 +139,12 @@ export function formatDate(value: string | null | undefined): string {
 export function formatShortDate(value: string | null | undefined): string {
   const date = parseInstant(value);
   return date ? `${MONTHS[date.getUTCMonth()]} ${date.getUTCDate()}` : MISSING;
+}
+
+/** Wed Nov 4 */
+export function formatDayLabel(value: string | null | undefined): string {
+  const date = parseInstant(value);
+  return date ? `${WEEKDAYS[date.getUTCDay()]} ${formatShortDate(value)}` : MISSING;
 }
 
 /** 30 Sep 2026, 20:36 UTC */
