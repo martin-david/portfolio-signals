@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import type { AnalyzedHoldingDto, HoldingDetailDto } from '@/api/schema';
+import { ProviderNotices } from '@/features/integrations/DataFreshness';
 import { VerdictChip } from '@/features/portfolio/components/VerdictChip';
 import { useHolding, usePortfolio } from '@/features/portfolio/hooks';
 import { describeSignalsFetched } from '@/features/portfolio/narrative';
@@ -168,6 +169,7 @@ function Loaded({
           <Text variant="caption" tone="subtle">
             {describeSignalsFetched(detail.signalsFetchedAt, now)}
           </Text>
+          <ProviderNotices />
         </View>
       </Band>
 

@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 
+import { DataFreshness } from '@/features/integrations/DataFreshness';
 import { useAnalysis, usePortfolio } from '@/features/portfolio/hooks';
 import {
   DEFAULT_SORT,
@@ -147,6 +148,7 @@ export function HoldingsScreen() {
               ? 'Each bar shows where a signal sits on its scale. The shaded stretch is the supportive zone, and the marker turns teal inside it and crimson when it is clearly adverse. Select a holding to see its flags and analysts.'
               : 'Select a holding to see its signals, flags and analysts.'}
           </Text>
+          {analysis.data ? <DataFreshness analysis={analysis.data} /> : null}
         </View>
       </Band>
       <Band tone="sheet">{content()}</Band>

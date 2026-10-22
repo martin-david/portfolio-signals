@@ -232,3 +232,14 @@ describe('when the holding is not there', () => {
     expect(await screen.findByRole('header', { name: 'NWND' }, LONG)).toBeOnTheScreen();
   });
 });
+
+describe('when a provider has a problem', () => {
+  it('says what is wrong under the title, since the signals shown are as old as the last good sync', async () => {
+    await renderHolding('NWND', { scenario: 'rate-limited' });
+
+    expect(
+      await screen.findByText('TipRanks is rate limiting requests', {}, LONG),
+    ).toBeOnTheScreen();
+    expect(screen.getByTestId('holding-score')).toHaveTextContent('Score 75, Strong');
+  });
+});

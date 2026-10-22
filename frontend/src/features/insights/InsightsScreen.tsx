@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { DataFreshness } from '@/features/integrations/DataFreshness';
 import { useAnalysis } from '@/features/portfolio/hooks';
 import {
   EARNINGS_WINDOW_DAYS,
@@ -142,6 +143,7 @@ export function InsightsScreen() {
             What the verdicts cannot show on their own: how far analysts and AI models agree, and
             when your holdings are tested.
           </Text>
+          {analysis.data ? <DataFreshness analysis={analysis.data} /> : null}
         </View>
       </Band>
       {body()}

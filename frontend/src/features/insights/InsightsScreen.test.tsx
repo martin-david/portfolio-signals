@@ -170,10 +170,21 @@ describe('before the first sync', () => {
     expect(await screen.findByText('No insights yet')).toBeOnTheScreen();
     expect(screen.queryByTestId('targets-chart')).toBeNull();
     expect(screen.queryByTestId('earnings-chart')).toBeNull();
+    expect(screen.queryByTestId('data-freshness')).toBeNull();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Go to Connections' }));
 
     await waitFor(() => expect(app.getPathname()).toBe('/connections'), LONG);
+  });
+});
+
+describe('when a provider has a problem', () => {
+  it('says how old the charts are and what is wrong, since they are only as new as the last good sync', async () => {
+    await renderInsights({ scenario: 'credentials-rejected' });
+
+    expect(await screen.findByText('eToro rejected your credentials', {}, LONG)).toBeOnTheScreen();
+    expect(screen.getByText(/^eToro snapshot of .*\(2 days ago\)$/)).toBeOnTheScreen();
+    expect(screen.getByTestId('targets-chart')).toBeOnTheScreen();
   });
 });
 

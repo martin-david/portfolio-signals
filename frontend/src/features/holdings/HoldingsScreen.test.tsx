@@ -457,3 +457,13 @@ describe('without a panel to show', () => {
     expect(await screen.findByTestId('holding-row-NWND', {}, LONG)).toBeOnTheScreen();
   });
 });
+
+describe('when a provider has a problem', () => {
+  it('says how old the data is and what is wrong, above the panel it is true of', async () => {
+    await renderHoldings(WIDE, { scenario: 'credentials-rejected' });
+
+    expect(await screen.findByText('eToro rejected your credentials', {}, LONG)).toBeOnTheScreen();
+    expect(screen.getByText(/^eToro snapshot of .*\(2 days ago\)$/)).toBeOnTheScreen();
+    expect(screen.getByTestId('holdings-table')).toBeOnTheScreen();
+  });
+});
