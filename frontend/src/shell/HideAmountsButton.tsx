@@ -11,7 +11,7 @@ export function HideAmountsButton({ showLabel }: { showLabel: boolean }) {
     <Pressable
       accessibilityRole="switch"
       accessibilityLabel="Hide amounts"
-      accessibilityState={{ checked: hidden }}
+      aria-checked={hidden}
       onPress={toggleHideAmounts}
       style={(state) => [
         styles.button,

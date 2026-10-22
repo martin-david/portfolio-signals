@@ -150,6 +150,6 @@ export function InsightsScreen() {
 }
 
 const styles = StyleSheet.create({
-  section: { gap: space.md },
+  section: { gap: space.lg },
   lede: { maxWidth: 720 },
 });

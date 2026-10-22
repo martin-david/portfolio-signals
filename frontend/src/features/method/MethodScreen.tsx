@@ -164,7 +164,7 @@ export function MethodScreen() {
       </Band>
 
       <Band>
-        <Grid columns={wide ? 2 : 1}>
+        <Grid columns={wide ? 2 : 1} rowGap={space.xl}>
           <Section title="What is missing">
             <View role="list" style={styles.list}>
               {WHAT_IS_MISSING.map((item) => (

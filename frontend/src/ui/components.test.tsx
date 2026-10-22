@@ -3,8 +3,10 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { renderUi } from '@/test/renderUi';
 
 import { Button } from './Button';
+import { Grid } from './Grid';
 import { Icon } from './Icon';
 import { Notice } from './Notice';
+import { Text } from './Text';
 import { TextField } from './TextField';
 
 describe('Button', () => {
@@ -43,6 +45,19 @@ describe('Button', () => {
 
     expect(onPress).not.toHaveBeenCalled();
   });
+
+  it('keeps its icon out of the accessibility tree, so the label is all that is read', async () => {
+    const rendered = await renderUi(<Button icon="logout">Sign out</Button>);
+
+    expect(JSON.stringify(rendered.toJSON())).toContain('"aria-hidden":true');
+    expect(screen.getByRole('button', { name: 'Sign out' })).toBeOnTheScreen();
+  });
+
+  it('hides nothing when it has no icon', async () => {
+    const rendered = await renderUi(<Button>Sign out</Button>);
+
+    expect(JSON.stringify(rendered.toJSON())).not.toContain('"aria-hidden":true');
+  });
 });
 
 describe('Notice', () => {
@@ -69,6 +84,30 @@ describe('Notice', () => {
     await renderUi(<Notice tone="danger" title="eToro rejected your credentials" />);
 
     expect(screen.getByRole('alert')).toBeOnTheScreen();
+  });
+});
+
+describe('Grid', () => {
+  it('has no space between its rows unless it is asked for', async () => {
+    await renderUi(
+      <Grid columns={1} testID="grid">
+        <Text>First</Text>
+        <Text>Second</Text>
+      </Grid>,
+    );
+
+    expect(screen.getByTestId('grid')).toHaveStyle({ rowGap: 0 });
+  });
+
+  it('spaces its rows by the gap it is given', async () => {
+    await renderUi(
+      <Grid columns={1} rowGap={24} testID="grid">
+        <Text>First</Text>
+        <Text>Second</Text>
+      </Grid>,
+    );
+
+    expect(screen.getByTestId('grid')).toHaveStyle({ rowGap: 24 });
   });
 });
 

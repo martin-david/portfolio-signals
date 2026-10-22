@@ -89,6 +89,19 @@ describe('the app frame', () => {
     await fireEvent.press(screen.getByRole('tab', { name: 'Settings' }));
     await waitFor(() => expect(app.getPathname()).toBe('/settings'), LONG);
     expect(screen.getByRole('tab', { name: 'Settings' })).toBeSelected();
+    expect(await screen.findByRole('header', { name: 'Your details' }, LONG)).toBeOnTheScreen();
+  });
+
+  it('signs out from Settings and returns to the sign-in screen', async () => {
+    const app = await renderRouter('./src/app');
+    await openDemo();
+
+    await fireEvent.press(screen.getByRole('tab', { name: 'Settings' }));
+    await fireEvent.press(await screen.findByRole('button', { name: 'Sign out' }, LONG));
+
+    await waitFor(() => expect(app.getPathname()).toBe('/sign-in'), LONG);
+    expect(await screen.findByRole('button', { name: 'Open the demo' }, LONG)).toBeOnTheScreen();
+    expect(screen.queryByRole('tab', { name: 'Overview' })).toBeNull();
   });
 
   it('keeps Holdings current while a single holding is open', async () => {

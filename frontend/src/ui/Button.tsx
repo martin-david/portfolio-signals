@@ -1,7 +1,7 @@
-import type { ComponentProps } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { Button as PaperButton } from 'react-native-paper';
 
+import { Icon } from './Icon';
 import { colors, fonts, layout, radius } from './tokens';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'quiet' | 'danger';
@@ -10,8 +10,8 @@ export interface ButtonProps {
   children: string;
   onPress?: () => void;
   variant?: ButtonVariant;
-  /** MaterialCommunityIcons name. */
-  icon?: ComponentProps<typeof PaperButton>['icon'];
+  /** MaterialCommunityIcons name. The icon is decorative: the label says what the button does. */
+  icon?: string;
   loading?: boolean;
   disabled?: boolean;
   accessibilityLabel?: string;
@@ -51,7 +51,7 @@ export function Button({
   return (
     <PaperButton
       mode={modeFor[variant]}
-      icon={icon}
+      icon={icon ? ({ size, color }) => <Icon name={icon} size={size} color={color} /> : undefined}
       loading={loading}
       disabled={disabled}
       onPress={loading ? undefined : onPress}
