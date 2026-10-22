@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   Animated,
+  Platform,
   StyleSheet,
   View,
   type DimensionValue,
@@ -29,10 +30,12 @@ export function SkeletonBlock({
       opacity.setValue(1);
       return undefined;
     }
+    // The web has no native animation module; asking for one only logs a warning.
+    const useNativeDriver = Platform.OS !== 'web';
     const loop = Animated.loop(
       Animated.sequence([
-        Animated.timing(opacity, { toValue: 0.45, duration: 700, useNativeDriver: true }),
-        Animated.timing(opacity, { toValue: 1, duration: 700, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 0.45, duration: 700, useNativeDriver }),
+        Animated.timing(opacity, { toValue: 1, duration: 700, useNativeDriver }),
       ]),
     );
     loop.start();

@@ -6,13 +6,14 @@ import { queryKeys } from '@/api/queryKeys';
 import { nullWhen, unwrap } from '@/api/request';
 
 /** The signed-in user's profile, or null when they have not registered yet. */
-export function useMe() {
+export function useMe({ enabled = true }: { enabled?: boolean } = {}) {
   const client = useApiClient();
   return useQuery({
     queryKey: queryKeys.me,
     queryFn: ({ signal }) =>
       nullWhen(unwrap(client.GET('/api/v1/me', { signal })), ProblemCode.UserNotRegistered),
     staleTime: 5 * 60_000,
+    enabled,
   });
 }
 

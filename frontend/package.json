@@ -5,6 +5,7 @@
   "main": "expo-router/entry",
   "dependencies": {
     "@expo-google-fonts/barlow-semi-condensed": "^0.4.1",
+    "@expo/vector-icons": "^15.0.2",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@tanstack/react-query": "^5.104.5",
     "expo": "~58.0.17",
@@ -46,6 +47,7 @@
     "start": "expo start --port 8082",
     "web": "expo start --web --port 8082",
     "web:mock": "cross-env EXPO_PUBLIC_API_MODE=mock expo start --web --port 8082",
+    "web:mock:empty": "cross-env EXPO_PUBLIC_API_MODE=mock EXPO_PUBLIC_MOCK_SCENARIO=empty expo start --web --port 8082",
     "android": "expo start --android --port 8082",
     "android:mock": "cross-env EXPO_PUBLIC_API_MODE=mock expo start --android --port 8082",
     "ios": "expo start --ios --port 8082",

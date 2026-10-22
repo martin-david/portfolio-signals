@@ -18,15 +18,10 @@ module.exports = defineConfig([
     },
   },
   {
-    // The mock API is a development and test tool: production code reaches it only through the client factory,
-    // which loads it with a dynamic import when EXPO_PUBLIC_API_MODE=mock.
+    // The demo API is a development and test tool: production code reaches it only through the loader, which requires
+    // it when EXPO_PUBLIC_API_MODE=mock and lets the bundler drop it otherwise.
     files: ['src/**/*.{ts,tsx}'],
-    ignores: [
-      'src/mocks/**',
-      'src/test/**',
-      'src/api/createApiClient.ts',
-      'src/**/*.test.{ts,tsx}',
-    ],
+    ignores: ['src/mocks/**', 'src/test/**', 'src/api/mockLoader.ts', 'src/**/*.test.{ts,tsx}'],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -34,7 +29,7 @@ module.exports = defineConfig([
           patterns: [
             {
               group: ['@/mocks', '@/mocks/*', '**/mocks', '**/mocks/*'],
-              message: 'Only src/api/createApiClient.ts may load the mock API.',
+              message: 'Only src/api/mockLoader.ts may load the demo API.',
             },
           ],
         },

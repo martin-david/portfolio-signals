@@ -3,6 +3,7 @@ import createClient from 'openapi-fetch';
 import type { AppConfig } from '@/config/env';
 
 import type { paths } from './schema';
+import { loadDemoApi } from './mockLoader';
 
 export type ApiClient = ReturnType<typeof createClient<paths>>;
 export type FetchLike = (request: Request) => Promise<Response>;
@@ -81,11 +82,7 @@ export function withTimeout(baseFetch: FetchLike, timeoutMs: number): FetchLike 
 
 function resolveBaseFetch(config: AppConfig): FetchLike {
   if (config.apiMode === 'mock') {
-    // Loaded on demand so the demo data never ships in a build that talks to the real backend.
-    return async (request) => {
-      const { getMockFetch } = await import('@/mocks/mockFetch');
-      return getMockFetch(config.mockScenario)(request);
-    };
+    return (request) => loadDemoApi().getMockFetch(config.mockScenario)(request);
   }
   return (request) => fetch(request);
 }

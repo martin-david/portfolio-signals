@@ -15,16 +15,18 @@ export interface ScreenProps {
   children: ReactNode;
   refreshing?: boolean;
   onRefresh?: () => void;
+  /** Centres the content vertically when it is shorter than the window (sign-in). */
+  centered?: boolean;
   testID?: string;
 }
 
 /** A scrolling screen on the paper ground. Content sits in Bands that centre themselves up to the maximum width. */
-export function Screen({ children, refreshing, onRefresh, testID }: ScreenProps) {
+export function Screen({ children, refreshing, onRefresh, centered, testID }: ScreenProps) {
   return (
     <ScrollView
       testID={testID}
       style={styles.screen}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, centered && styles.centered]}
       keyboardShouldPersistTaps="handled"
       refreshControl={
         onRefresh ? (
@@ -83,5 +85,6 @@ export function Band({
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
   content: { flexGrow: 1 },
+  centered: { justifyContent: 'center' },
   inner: { width: '100%', maxWidth: layout.maxContentWidth, alignSelf: 'center' },
 });
