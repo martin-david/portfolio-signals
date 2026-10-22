@@ -1,6 +1,7 @@
 import { Tabs } from 'expo-router/js-tabs';
 
 import { AppFrame } from '@/shell/AppFrame';
+import { SceneVisibility } from '@/shell/SceneVisibility';
 import { colors } from '@/ui';
 
 /**
@@ -14,6 +15,7 @@ export default function AppLayout() {
         backBehavior="history"
         tabBar={() => null}
         screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: colors.paper } }}
+        screenLayout={({ children }) => <SceneVisibility>{children}</SceneVisibility>}
       >
         <Tabs.Screen name="index" />
         <Tabs.Screen name="holdings/index" />

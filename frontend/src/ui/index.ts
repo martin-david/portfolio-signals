@@ -3,6 +3,7 @@ export { Button, type ButtonProps, type ButtonVariant } from './Button';
 export { ConfirmDialog, type ConfirmDialogProps } from './ConfirmDialog';
 export { EmptyState, type EmptyStateProps } from './EmptyState';
 export { ErrorState, type ErrorStateProps } from './ErrorState';
+export { Grid, type GridProps } from './Grid';
 export { Icon, type IconProps } from './Icon';
 export { Notice, type NoticeAction, type NoticeProps, type NoticeTone } from './Notice';
 export { Panel, type PanelProps } from './Panel';
@@ -23,6 +24,8 @@ export {
   radius,
   space,
   typeScale,
+  verdictChip,
+  verdictFill,
   type TextTone,
   type TextVariant,
   type VerdictKey,

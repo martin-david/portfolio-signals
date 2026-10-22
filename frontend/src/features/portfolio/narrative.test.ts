@@ -1,16 +1,50 @@
 import { makeAnalysis, makeRow } from '@/test/analysisBuilders';
 import { loadDemo } from '@/test/demo';
 
-import { attentionItems, buildFindings, buildHeadline } from './narrative';
+import { attentionItems, buildFindings, buildHeadline, describeSnapshot } from './narrative';
+
+describe('describeSnapshot', () => {
+  const now = new Date('2026-10-21T12:00:00Z');
+
+  it('says when the portfolio was saved and the signals fetched, and how long ago', () => {
+    const meta = describeSnapshot(
+      { asOf: '2026-10-21T10:00:00Z', signalsFetchedAt: '2026-10-20T12:00:00Z' },
+      now,
+    );
+
+    expect(meta.snapshot).toBe('eToro snapshot of 21 Oct 2026, 10:00 UTC (2 hours ago)');
+    expect(meta.signals).toBe('TipRanks signals from 20 Oct 2026, 12:00 UTC (1 day ago)');
+  });
+
+  it('says so when TipRanks has delivered nothing yet', () => {
+    expect(
+      describeSnapshot({ asOf: '2026-10-21T10:00:00Z', signalsFetchedAt: null }, now).signals,
+    ).toBe('No TipRanks signals yet');
+  });
+
+  it('leaves out "ago" once the date alone says it, after two weeks', () => {
+    const meta = describeSnapshot(
+      { asOf: '2026-09-01T09:30:00Z', signalsFetchedAt: '2026-09-01T09:31:00Z' },
+      now,
+    );
+
+    expect(meta.snapshot).toBe('eToro snapshot of 1 Sep 2026, 09:30 UTC');
+    expect(meta.signals).toBe('TipRanks signals from 1 Sep 2026, 09:31 UTC');
+  });
+});
 
 describe('buildHeadline', () => {
   it('says there is nothing to assess when no holding matters', () => {
     const analysis = makeAnalysis([makeRow({ symbol: 'AAA', weightPct: 0.4 })]);
 
     expect(buildHeadline(analysis).headline).toBe('No holding is above 1% of your account yet.');
-    expect(buildHeadline(makeAnalysis([])).headline).toBe(
-      'No holding is above 1% of your account yet.',
-    );
+  });
+
+  it('says there is nothing to assess when the snapshot holds no positions at all', () => {
+    const { headline, lede } = buildHeadline(makeAnalysis([]));
+
+    expect(headline).toBe('There are no open positions to assess.');
+    expect(lede).toContain('Copy trading and cash are not assessed');
   });
 
   it('says the signals have not arrived when every position that matters has no data', () => {

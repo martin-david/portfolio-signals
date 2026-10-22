@@ -11,7 +11,7 @@ const metrics = {
   insets: { top: 0, left: 0, right: 0, bottom: 0 },
 };
 
-function Providers({ children }: { children: ReactNode }) {
+export function Providers({ children }: { children: ReactNode }) {
   return (
     <SafeAreaProvider initialMetrics={metrics}>
       <PaperProvider theme={paperTheme}>

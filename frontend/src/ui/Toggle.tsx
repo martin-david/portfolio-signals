@@ -33,11 +33,7 @@ export function Toggle({ label, value, onValueChange, description, testID }: Tog
           </Text>
         ) : null}
       </View>
-      <View
-        pointerEvents="none"
-        importantForAccessibility="no-hide-descendants"
-        accessibilityElementsHidden
-      >
+      <View pointerEvents="none" aria-hidden>
         <Switch value={value} color={colors.ink} />
       </View>
     </Pressable>

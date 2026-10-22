@@ -44,7 +44,7 @@ export function SkeletonBlock({
 
   return (
     <Animated.View
-      importantForAccessibility="no-hide-descendants"
+      aria-hidden
       style={[
         { width, height, opacity, backgroundColor: colors.rule2, borderRadius: radius.sm },
         style,

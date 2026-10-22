@@ -61,7 +61,7 @@ export function Notice({ tone = 'info', title, children, action, testID }: Notic
       accessibilityLiveRegion={tone === 'danger' ? 'assertive' : 'polite'}
       style={[styles.box, { backgroundColor: style.background }]}
     >
-      <View style={styles.icon} importantForAccessibility="no-hide-descendants">
+      <View style={styles.icon} aria-hidden>
         <Icon source={style.icon} size={22} color={style.accent} />
       </View>
       <View style={styles.body}>

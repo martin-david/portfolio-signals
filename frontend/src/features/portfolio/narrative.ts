@@ -1,5 +1,12 @@
 import type { AnalyzedHoldingDto, PortfolioAnalysisDto } from '@/api/schema';
-import { capitalize, formatPercent, formatSignedPercent, words } from '@/lib/format';
+import {
+  capitalize,
+  formatDateTime,
+  formatPercent,
+  formatSignedPercent,
+  formatRelative,
+  words,
+} from '@/lib/format';
 
 /** A line of copy that may contain the user's own amounts, which the Amount component can hide. */
 export type CopySegment = string | { amount: number; signed?: boolean };
@@ -29,6 +36,12 @@ function symbols(rows: AnalyzedHoldingDto[]): string {
  * generated from the verdicts, never written for a particular portfolio.
  */
 export function buildHeadline(analysis: PortfolioAnalysisDto): Headline {
+  if (analysis.holdings.length === 0) {
+    return {
+      headline: 'There are no open positions to assess.',
+      lede: 'The latest eToro snapshot holds none of your own positions. Copy trading and cash are not assessed.',
+    };
+  }
   const material = analysis.holdings.filter((row) => row.assessment.material);
   if (material.length === 0) {
     return {
@@ -39,7 +52,7 @@ export function buildHeadline(analysis: PortfolioAnalysisDto): Headline {
   if (material.every((row) => row.assessment.verdict === 'NoData')) {
     return {
       headline: 'Analyst signals have not arrived yet.',
-      lede: 'Connect TipRanks and run a sync to see a verdict for each holding. Until then every position reads No data.',
+      lede: 'Every position reads No data until TipRanks signals arrive. Connect TipRanks if you have not, then run a sync.',
     };
   }
 
@@ -81,6 +94,34 @@ export function buildHeadline(analysis: PortfolioAnalysisDto): Headline {
   }
   parts.push('Review means look again, not sell.');
   return { headline, lede: parts.join(' ') };
+}
+
+export interface SnapshotMeta {
+  /** When the eToro portfolio was saved. */
+  snapshot: string;
+  /** When the TipRanks signals were fetched. */
+  signals: string;
+}
+
+const TWO_WEEKS_MS = 14 * 24 * 60 * 60_000;
+
+function dated(value: string, now: Date): string {
+  const exact = formatDateTime(value);
+  const age = Math.abs(now.getTime() - Date.parse(value));
+  return age < TWO_WEEKS_MS ? `${exact} (${formatRelative(value, now)})` : exact;
+}
+
+/** Where the numbers on the screen come from and how old they are, in the prototype's meta line. */
+export function describeSnapshot(
+  analysis: Pick<PortfolioAnalysisDto, 'asOf' | 'signalsFetchedAt'>,
+  now: Date,
+): SnapshotMeta {
+  return {
+    snapshot: `eToro snapshot of ${dated(analysis.asOf, now)}`,
+    signals: analysis.signalsFetchedAt
+      ? `TipRanks signals from ${dated(analysis.signalsFetchedAt, now)}`
+      : 'No TipRanks signals yet',
+  };
 }
 
 function assessedShares(analysis: PortfolioAnalysisDto): { assessed: number; hold: number } {

@@ -4,9 +4,9 @@ import type { ReactNode } from 'react';
 
 import { ApiProvider } from '@/api/ApiProvider';
 import type { MockScenario } from '@/config/env';
-import { createMockBackend, type MockBackend } from '@/mocks/mockBackend';
+import { createMockBackend } from '@/mocks/mockBackend';
 import { useRefreshWhenSyncCompletes } from '@/features/sync/hooks';
-import { createTestApi } from '@/test/apiTestUtils';
+import { createTestApi, registerTestUser } from '@/test/apiTestUtils';
 import { renderUi } from '@/test/renderUi';
 import { ToastProvider } from '@/ui';
 
@@ -26,20 +26,10 @@ function SyncRefresh() {
   return null;
 }
 
-async function register(backend: MockBackend) {
-  await backend.fetch(
-    new Request('https://mock.invalid/api/v1/me', {
-      method: 'PUT',
-      headers: { 'X-Dev-User': 'tester', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ displayName: 'Ada', email: 'ada@example.test' }),
-    }),
-  );
-}
-
 async function renderScreen(scenario: MockScenario) {
   const api = createTestApi(scenario);
   if (scenario === 'empty') {
-    await register(api.backend);
+    await registerTestUser(api.backend);
   }
   const Wrapper = api.wrapper;
   await renderUi(
