@@ -95,3 +95,33 @@ export function ariaSortOf(current: PanelSort, key: SortKey): 'ascending' | 'des
   }
   return current.direction === 'asc' ? 'ascending' : 'descending';
 }
+
+/** What each column is called, in the header and in sentences about the order. */
+export const SORT_LABELS: Record<SortKey, string> = {
+  weight: 'Weight',
+  verdict: 'Verdict',
+  score: 'Score',
+  pnl: 'Result vs your cost',
+};
+
+const DIRECTION_WORDS: Record<SortKey, Record<SortDirection, string>> = {
+  weight: { desc: 'largest first', asc: 'smallest first' },
+  verdict: { asc: 'holds first', desc: 'no data first' },
+  score: { desc: 'highest first', asc: 'lowest first' },
+  pnl: { desc: 'best first', asc: 'worst first' },
+};
+
+/** The direction in words: "largest first", "worst first". */
+export function sortDirectionWords(sort: PanelSort): string {
+  return DIRECTION_WORDS[sort.key][sort.direction];
+}
+
+/** The order in words, for the caption under the filters and for the label of a column button. */
+export function describeSort(sort: PanelSort): string {
+  return `${SORT_LABELS[sort.key]}, ${sortDirectionWords(sort)}`;
+}
+
+/** What pressing a column button will do, for assistive technology. */
+export function sortHint(current: PanelSort, key: SortKey): string {
+  return `Sort by ${describeSort(nextSort(current, key)).toLowerCase()}`;
+}

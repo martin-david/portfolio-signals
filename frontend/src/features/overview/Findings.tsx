@@ -1,27 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 
-import type { CopySegment, Finding } from '@/features/portfolio/narrative';
-import { Amount, Grid, Heading, Text, colors, space, useBreakpoint } from '@/ui';
-
-function Copy({ segments, currency }: { segments: readonly CopySegment[]; currency: string }) {
-  return (
-    <Text tone="muted" style={styles.body}>
-      {segments.map((segment, index) =>
-        typeof segment === 'string' ? (
-          segment
-        ) : (
-          <Amount
-            key={index}
-            value={segment.amount}
-            signed={segment.signed}
-            currency={currency}
-            tone="muted"
-          />
-        ),
-      )}
-    </Text>
-  );
-}
+import { CopyText } from '@/features/portfolio/components/CopyText';
+import type { Finding } from '@/features/portfolio/narrative';
+import { Grid, Heading, colors, space, useBreakpoint } from '@/ui';
 
 export interface FindingsProps {
   findings: readonly Finding[];
@@ -38,7 +19,7 @@ export function Findings({ findings, currency = 'USD' }: FindingsProps) {
           <Heading level={3} variant="subheading">
             {finding.title}
           </Heading>
-          <Copy segments={finding.body} currency={currency} />
+          <CopyText segments={finding.body} currency={currency} style={styles.body} />
         </View>
       ))}
     </Grid>

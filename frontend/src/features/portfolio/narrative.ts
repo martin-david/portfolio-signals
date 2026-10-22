@@ -111,6 +111,11 @@ function dated(value: string, now: Date): string {
   return age < TWO_WEEKS_MS ? `${exact} (${formatRelative(value, now)})` : exact;
 }
 
+/** When the TipRanks signals were fetched, or that none have been. */
+export function describeSignalsFetched(value: string | null, now: Date): string {
+  return value ? `TipRanks signals from ${dated(value, now)}` : 'No TipRanks signals yet';
+}
+
 /** Where the numbers on the screen come from and how old they are, in the prototype's meta line. */
 export function describeSnapshot(
   analysis: Pick<PortfolioAnalysisDto, 'asOf' | 'signalsFetchedAt'>,
@@ -118,9 +123,7 @@ export function describeSnapshot(
 ): SnapshotMeta {
   return {
     snapshot: `eToro snapshot of ${dated(analysis.asOf, now)}`,
-    signals: analysis.signalsFetchedAt
-      ? `TipRanks signals from ${dated(analysis.signalsFetchedAt, now)}`
-      : 'No TipRanks signals yet',
+    signals: describeSignalsFetched(analysis.signalsFetchedAt, now),
   };
 }
 

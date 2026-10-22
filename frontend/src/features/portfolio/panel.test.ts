@@ -4,9 +4,11 @@ import { loadDemo } from '@/test/demo';
 import {
   DEFAULT_SORT,
   ariaSortOf,
+  describeSort,
   filterCounts,
   filterHoldings,
   nextSort,
+  sortHint,
   sortHoldings,
 } from './panel';
 
@@ -132,5 +134,25 @@ describe('nextSort', () => {
     expect(ariaSortOf(sort, 'score')).toBe('ascending');
     expect(ariaSortOf({ key: 'score', direction: 'desc' }, 'score')).toBe('descending');
     expect(ariaSortOf(sort, 'weight')).toBe('none');
+  });
+});
+
+describe('describeSort', () => {
+  it.each([
+    [{ key: 'weight', direction: 'desc' }, 'Weight, largest first'],
+    [{ key: 'weight', direction: 'asc' }, 'Weight, smallest first'],
+    [{ key: 'verdict', direction: 'asc' }, 'Verdict, holds first'],
+    [{ key: 'verdict', direction: 'desc' }, 'Verdict, no data first'],
+    [{ key: 'score', direction: 'desc' }, 'Score, highest first'],
+    [{ key: 'score', direction: 'asc' }, 'Score, lowest first'],
+    [{ key: 'pnl', direction: 'desc' }, 'Result vs your cost, best first'],
+    [{ key: 'pnl', direction: 'asc' }, 'Result vs your cost, worst first'],
+  ] as const)('puts %j in words as "%s"', (sort, words) => {
+    expect(describeSort(sort)).toBe(words);
+  });
+
+  it('says what the next press of a column will do', () => {
+    expect(sortHint(DEFAULT_SORT, 'weight')).toBe('Sort by weight, smallest first');
+    expect(sortHint(DEFAULT_SORT, 'verdict')).toBe('Sort by verdict, holds first');
   });
 });

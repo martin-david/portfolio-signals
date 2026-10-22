@@ -1,8 +1,8 @@
 import { useLocalSearchParams } from 'expo-router';
 
-import { PlaceholderScreen } from '@/shell/PlaceholderScreen';
+import { HoldingScreen } from '@/features/holdings/HoldingScreen';
 
-export default function HoldingDetail() {
+export default function HoldingRoute() {
   const { symbol } = useLocalSearchParams<{ symbol: string }>();
-  return <PlaceholderScreen title={symbol ?? 'Holding'} summary="One position in detail." />;
+  return <HoldingScreen symbol={symbol ?? ''} />;
 }

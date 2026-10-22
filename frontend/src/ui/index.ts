@@ -17,6 +17,7 @@ export { ToastProvider, useToast, type ToastOptions } from './Toast';
 export { Toggle, type ToggleProps } from './Toggle';
 export { paperTheme } from './theme';
 export { isFocused, isHovered } from './pressable';
+export { webAria } from './webAria';
 export {
   colors,
   fonts,

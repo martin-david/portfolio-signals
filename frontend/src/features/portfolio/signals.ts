@@ -116,7 +116,7 @@ export function signalCells(row: AnalyzedHoldingDto): SignalCell[] {
 
   const trend: SignalCell = {
     key: 'trend',
-    heading: 'Trend (day / week)',
+    heading: 'Trend',
     present: components.technicals !== null,
     value: components.technicals,
     min: -1,
@@ -154,7 +154,7 @@ export function signalCells(row: AnalyzedHoldingDto): SignalCell[] {
 export function signalLines(row: AnalyzedHoldingDto): string[] {
   return signalCells(row)
     .filter((cell) => cell.present)
-    .map((cell) => `${cell.heading.replace(' (day / week)', '')} ${cell.text}`);
+    .map((cell) => `${cell.heading} ${cell.text}`);
 }
 
 /** Why a holding has no signals at all (crypto, funds, or nothing synced yet), from the backend's own flags. */
