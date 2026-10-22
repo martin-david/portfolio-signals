@@ -16,6 +16,8 @@ export interface TextFieldProps {
   keyboardType?: 'default' | 'email-address';
   autoCapitalize?: 'none' | 'sentences' | 'words';
   disabled?: boolean;
+  /** Moves focus here when the field appears, for forms that open on request. */
+  autoFocus?: boolean;
   onSubmitEditing?: () => void;
   testID?: string;
 }
@@ -30,6 +32,7 @@ export function TextField({
   keyboardType = 'default',
   autoCapitalize = 'none',
   disabled = false,
+  autoFocus = false,
   onSubmitEditing,
   testID,
 }: TextFieldProps) {
@@ -53,6 +56,7 @@ export function TextField({
         autoCapitalize={secret ? 'none' : autoCapitalize}
         autoCorrect={false}
         spellCheck={false}
+        autoFocus={autoFocus}
         autoComplete={secret ? 'off' : undefined}
         importantForAutofill={secret ? 'no' : 'auto'}
         secureTextEntry={secret && !revealed}
