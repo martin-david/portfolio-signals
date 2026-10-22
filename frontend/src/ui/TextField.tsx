@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import { HelperText, TextInput as PaperTextInput } from 'react-native-paper';
 
 import { colors, fonts, space } from './tokens';
@@ -42,7 +42,9 @@ export function TextField({
     <View>
       <PaperTextInput
         mode="outlined"
-        label={label}
+        // Paper draws the label twice, once to measure and once to float, and a screen reader would read both on top of
+        // the field's own name, which accessibilityLabel gives it.
+        label={<Text aria-hidden>{label}</Text>}
         value={value}
         onChangeText={onChangeText}
         error={Boolean(error)}

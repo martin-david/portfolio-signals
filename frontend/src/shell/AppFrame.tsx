@@ -10,6 +10,7 @@ import { DemoNotice } from './DemoNotice';
 import { HideAmountsButton } from './HideAmountsButton';
 import { BottomNavLink, TopNavLink } from './NavLink';
 import { METHOD_ITEM, NAV_ITEMS, isActive } from './navItems';
+import { RouteAnnouncer } from './RouteAnnouncer';
 import { MAIN_CONTENT_ID, SkipLink } from './SkipLink';
 
 function TopBar({ wide }: { wide: boolean }) {
@@ -67,6 +68,7 @@ export function AppFrame({ children }: { children: ReactNode }) {
   return (
     <View style={styles.frame}>
       <SkipLink />
+      <RouteAnnouncer />
       <TopBar wide={wide} />
       <DemoNotice />
       <View nativeID={MAIN_CONTENT_ID} role="main" tabIndex={-1} style={styles.main}>

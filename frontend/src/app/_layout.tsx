@@ -1,5 +1,5 @@
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 
@@ -11,15 +11,23 @@ import { PreferencesProvider } from '@/lib/preferences';
 import { AppNavigator } from '@/shell/AppNavigator';
 import { ConfigErrorScreen } from '@/shell/ConfigErrorScreen';
 import { PlainFrame } from '@/shell/PlainFrame';
-import { ToastProvider, paperTheme, useAppFonts } from '@/ui';
+import {
+  ToastProvider,
+  installFocusRing,
+  paperTheme,
+  themeFor,
+  useAppFonts,
+  useReducedMotion,
+} from '@/ui';
 
 // Keep the native splash screen up until the session is known; the web has none.
 SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
-function useDocumentLanguage() {
+function useWebDocument() {
   useEffect(() => {
     if (Platform.OS === 'web') {
       document.documentElement.lang = 'en';
+      installFocusRing();
     }
   }, []);
 }
@@ -27,12 +35,14 @@ function useDocumentLanguage() {
 function ConfiguredApp({ config }: { config: AppConfig }) {
   const [services] = useState(() => createAppServices(config));
   const fontsReady = useAppFonts();
+  const reducedMotion = useReducedMotion();
+  const theme = useMemo(() => themeFor(reducedMotion), [reducedMotion]);
   const hideSplash = useCallback(() => {
     SplashScreen.hideAsync().catch(() => undefined);
   }, []);
 
   return (
-    <PaperProvider theme={paperTheme}>
+    <PaperProvider theme={theme}>
       <PreferencesProvider>
         <AuthProvider controller={services.auth}>
           <ApiProvider
@@ -51,7 +61,7 @@ function ConfiguredApp({ config }: { config: AppConfig }) {
 }
 
 export default function RootLayout() {
-  useDocumentLanguage();
+  useWebDocument();
   const result = loadConfig();
   if (!result.ok) {
     return (

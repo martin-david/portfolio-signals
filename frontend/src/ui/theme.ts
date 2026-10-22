@@ -55,3 +55,13 @@ export const paperTheme: MD3Theme = {
     },
   },
 };
+
+/**
+ * The theme for what the system asks of motion. Paper times its own animations (snackbar, dialog, the floating label of
+ * a field) by the scale of its theme, so a scale of zero is how they are turned off.
+ */
+export function themeFor(reducedMotion: boolean): MD3Theme {
+  return reducedMotion
+    ? { ...paperTheme, animation: { ...paperTheme.animation, scale: 0 } }
+    : paperTheme;
+}
