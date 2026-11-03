@@ -157,4 +157,44 @@ describe('TextField', () => {
 
     expect(screen.getByLabelText('Display name').props.secureTextEntry).toBeFalsy();
   });
+
+  it('gives every field an id of its own, even when two have the same label', async () => {
+    await renderUi(
+      <>
+        <TextField label="API key" value="" onChangeText={() => undefined} secret />
+        <TextField label="API key" value="" onChangeText={() => undefined} secret />
+      </>,
+    );
+
+    const [first, second] = screen.getAllByLabelText('API key');
+    expect(first.props.nativeID).toEqual(expect.any(String));
+    expect(first.props.nativeID).not.toBe('');
+    expect(second.props.nativeID).not.toBe(first.props.nativeID);
+  });
+
+  it('says what an ordinary field asks for, so that it can be filled in', async () => {
+    await renderUi(
+      <>
+        <TextField label="E-mail" value="" onChangeText={() => undefined} autoComplete="email" />
+        <TextField label="Notes" value="" onChangeText={() => undefined} />
+      </>,
+    );
+
+    expect(screen.getByLabelText('E-mail').props.autoComplete).toBe('email');
+    expect(screen.getByLabelText('Notes').props.autoComplete).toBeUndefined();
+  });
+
+  it('never lets a secret be filled in, whatever it is told', async () => {
+    await renderUi(
+      <TextField
+        label="API key"
+        value=""
+        onChangeText={() => undefined}
+        secret
+        autoComplete="email"
+      />,
+    );
+
+    expect(screen.getByLabelText('API key').props.autoComplete).toBe('off');
+  });
 });

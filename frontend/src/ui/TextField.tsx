@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Text, View } from 'react-native';
 import { HelperText, TextInput as PaperTextInput } from 'react-native-paper';
 
@@ -15,6 +15,8 @@ export interface TextFieldProps {
   secret?: boolean;
   keyboardType?: 'default' | 'email-address';
   autoCapitalize?: 'none' | 'sentences' | 'words';
+  /** What the field asks for, so that the browser or keyboard can offer to fill it in. Secrets ignore it. */
+  autoComplete?: 'name' | 'email';
   disabled?: boolean;
   /** Moves focus here when the field appears, for forms that open on request. */
   autoFocus?: boolean;
@@ -31,12 +33,15 @@ export function TextField({
   secret = false,
   keyboardType = 'default',
   autoCapitalize = 'none',
+  autoComplete,
   disabled = false,
   autoFocus = false,
   onSubmitEditing,
   testID,
 }: TextFieldProps) {
   const [revealed, setRevealed] = useState(false);
+  // A browser cannot remember or fill a field that has no id, and two fields with the same label need different ones.
+  const id = useId();
   const message = error ?? hint;
   return (
     <View>
@@ -59,7 +64,8 @@ export function TextField({
         autoCorrect={false}
         spellCheck={false}
         autoFocus={autoFocus}
-        autoComplete={secret ? 'off' : undefined}
+        nativeID={id}
+        autoComplete={secret ? 'off' : autoComplete}
         importantForAutofill={secret ? 'no' : 'auto'}
         secureTextEntry={secret && !revealed}
         right={

@@ -63,6 +63,7 @@ export function ProfileForm({
         onChangeText={(displayName) => change({ displayName })}
         error={clientErrors.displayName ?? serverErrors.displayName}
         autoCapitalize="words"
+        autoComplete="name"
         disabled={save.isPending}
         testID="profile-display-name"
       />
@@ -72,6 +73,7 @@ export function ProfileForm({
         onChangeText={(email) => change({ email })}
         error={clientErrors.email ?? serverErrors.email}
         keyboardType="email-address"
+        autoComplete="email"
         disabled={save.isPending}
         onSubmitEditing={submit}
         testID="profile-email"
