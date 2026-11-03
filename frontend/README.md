@@ -60,17 +60,31 @@ Every screen has loading, empty and error states, and says how old the data is a
 
 ## Running against the backend
 
-Start the backend as described in [backend/README.md](../backend/README.md) (it needs a Cosmos DB account or the emulator, and Azurite for the queue). Then:
+Start the backend as described in [backend/README.md](../backend/README.md). It needs a Cosmos DB account or the emulator; Azurite and the Functions app matter only for syncing, not for reading. A new database has no portfolio, so fill it with the fictional one first (see _Seeding a demo account_ in that README), then start the app:
 
 ```powershell
-cd frontend
+cd backend
+dotnet run --project tools\PortfolioSignals.DevSeed   # once: fills the user "demo" with a fictional portfolio
+cd ..\frontend
 copy .env.example .env.local   # live mode with development sign-in is the default
-npm run web
+npm run web                    # then sign in as "demo"
 ```
+
+A name the backend has not seen starts with the profile set-up screen instead, and has no portfolio until it is seeded or synced.
 
 In the Development environment the API accepts the `X-Dev-User` header, which is what `EXPO_PUBLIC_AUTH_MODE=dev` sends, and its CORS policy allows `http://localhost:8082`. For the Android emulator use `EXPO_PUBLIC_API_BASE_URL=http://10.0.2.2:5196` (native apps need no CORS) and `npm run android`, which needs the Android SDK and an emulator or device. `android/` and `ios/` are generated and git-ignored.
 
-The live path is covered by the generated contract types and by tests against the demo API, which implements the same contract. It has also been run in a browser against the real API started without a database: the CORS preflight from `http://localhost:8082` succeeds, development sign-in sends `X-Dev-User`, the API's `application/problem+json` error is turned into a message, and a profile request that keeps failing ends in an error screen with _Try again_ and _Sign out_. While the server is slow to answer, the loading screen says so after six seconds. Nothing past that point has run against the real API, because no Cosmos DB account or emulator was available.
+The live path is covered by the generated contract types and by tests against the demo API, which implements the same contract. It has also been run end to end in a browser against the real API and the Cosmos DB emulator with the seeded account: development sign-in, the Overview, a holding that borrows its sibling listing's data, Connections with its sync history, and the error screens. The analysis the real API served for the seeded account matched the demo API's, field for field (verdicts, scores, flags and totals), when the demo's price drift was switched off. What has not been run is a sync against the real eToro and TipRanks APIs, sign-in with a real identity provider, and the Android app.
+
+### If the app says "Can't reach the server"
+
+The browser could not complete a request to `EXPO_PUBLIC_API_BASE_URL`. Check, in this order:
+
+1. **Is the API up at that address?** `curl http://localhost:5196/health/live` should answer `Healthy`. With Visual Studio, the `http` and `https` launch profiles both serve port 5196.
+2. **Is the page's origin allowed?** The Development API allows `http://localhost:8082`, the port of `npm run web`. For another port, start the API with `Cors__AllowedOrigins__0=http://localhost:<port>`.
+3. **Is it an older API build?** One that redirects http to https makes the browser refuse the CORS preflight (the console says _Redirect is not allowed for a preflight request_). Restart the API from current code. Until then, point the app at its https address with `EXPO_PUBLIC_API_BASE_URL=https://localhost:7184` in `.env.local`, after trusting the development certificate once with `dotnet dev-certs https --trust`.
+
+Expo inlines the `EXPO_PUBLIC_*` values when it bundles, so restart `npm run web` after changing `.env.local`.
 
 ### Configuration
 

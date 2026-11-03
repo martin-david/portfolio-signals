@@ -96,11 +96,16 @@ timer (every 15 min)
 - Provider credentials are write-only through `PUT /api/v1/integrations/{provider}`. They are stored in Azure Key Vault, one secret per user and provider, named from a hash of the user id (no personal data in the name), and read only by the sync workflow. They are never stored in Cosmos DB, returned by the API, or logged (`ProviderCredentials.ToString` is redacted).
 - Authentication is delegated to an OpenID Connect provider (for example Microsoft Entra External ID): the API validates JWT bearer tokens and uses the `oid`/`sub` claim as the user id. Every endpoint except `/health/live` and `/openapi/v1.json` requires an authenticated user; there is no way to address another user's data through the API.
 - `Authentication:Mode=Development` trusts an `X-Dev-User` header for local work and is refused outside the Development environment.
+- HTTP is redirected to HTTPS everywhere except Development. A browser refuses to follow a redirect on a CORS preflight, so redirecting locally made every browser request from the frontend's dev server fail, and the Android emulator could not follow a redirect to `https://localhost` either; `HttpsRedirectionTests` pins both sides.
 - Azure resources are accessed with `DefaultAzureCredential` (managed identity in Azure), so the Cosmos DB account, Key Vault and Storage account need no keys in configuration. The identity needs Cosmos DB data contributor on the database, `get`/`set`/`delete`/`recover` on Key Vault secrets and queue data contributor on the sync queue.
 
 ## Clients
 
 The [frontend](../../frontend/README.md) (Expo, for web and Android) is the first client. It is written against the OpenAPI document rather than against the code: `frontend/openapi/v1.json` is a snapshot of `/openapi/v1.json`, and its TypeScript types are generated from that snapshot, so a change to the wire format surfaces there as a compile error and as a failing `npm run api:check`. This is why the document has to describe the wire format exactly (enums as names, numbers as numbers, nullable properties always present), which the contract tests in `PortfolioSignals.Api.Tests` hold to. Browsers may only call the API from the origins in `Cors:AllowedOrigins`; native apps are not subject to CORS.
+
+## Local development
+
+Syncing needs a user's own eToro and TipRanks keys, a queue and the Functions app, so a new local database has nothing to show. `tools/PortfolioSignals.DevSeed` fills a development user's account instead. It composes the real application and infrastructure layers, swaps only the two provider adapters for fictional ones, and drives the same handlers a user and the scheduler would (register, connect, sync). The stored documents are therefore what a real sync produces, rather than hand-written JSON that could drift from the model. It writes only to a Cosmos DB emulator on the same machine and keeps its placeholder credentials in memory.
 
 ## Not in scope yet
 

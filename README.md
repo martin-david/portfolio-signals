@@ -48,6 +48,7 @@ The backend lives in [backend/](backend/README.md) (solution [PortfolioSignals.s
 - **Data:** Azure Cosmos DB for NoSQL through the Cosmos SDK, in two containers partitioned by user. EF Core is not used; Table Storage was not needed.
 - **Background sync:** Azure Functions (isolated worker). A timer finds connections that are due under the user's plan and queues one message per sync; a queue-triggered function runs it with retries, backoff and idempotency.
 - **Integrations:** eToro (public API) and TipRanks (MCP server) sit behind application-owned interfaces and adapters, called with each user's own credentials. Failures, quotas and retries are classified so a rate limit backs off the connection instead of burning quota.
+- **Local development:** the Cosmos DB emulator, Development-mode sign-in and a seeder (`backend/tools/PortfolioSignals.DevSeed`) that fills a user's account with a fictional portfolio through the real handlers, so the app has data without anyone's provider keys.
 
 ### Frontend
 
