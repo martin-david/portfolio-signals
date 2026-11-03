@@ -9,15 +9,23 @@ namespace PortfolioSignals.DevSeed;
 /// </summary>
 internal static class LocalCosmos
 {
-    public static Uri RequireLocalEndpoint(CosmosOptions options)
+    /// <summary>The emulator is reached with a connection string; an endpoint reached with a token means a real account.</summary>
+    public static void RequireConnectionString(CosmosOptions options)
     {
-        var endpoint = EndpointOf(options.ConnectionString)
-            ?? throw new SeedException("The seeder only writes to the local Cosmos DB emulator, which Cosmos:ConnectionString names; this configuration has no such connection string.");
+        if (string.IsNullOrWhiteSpace(options.ConnectionString))
+        {
+            throw new SeedException("The seeder only writes to the local Cosmos DB emulator, which Cosmos:ConnectionString names; this configuration has no such connection string.");
+        }
+    }
 
-        return endpoint.IsLoopback
+    /// <summary>
+    /// Judges the endpoint the Cosmos client resolved, not the connection string as text: the SDK has its own rules (when a key
+    /// is given twice the last one counts, quotes are removed) and a guard that read the text differently could be fooled.
+    /// </summary>
+    public static Uri RequireLoopback(Uri endpoint)
+        => endpoint.IsLoopback
             ? endpoint
             : throw new SeedException($"The seeder only writes to a Cosmos DB emulator on this machine, not to {endpoint.Host}.");
-    }
 
     /// <summary>The emulator is easy to forget to start, and the Cosmos client would retry for the better part of a minute before saying so.</summary>
     public static async Task<bool> IsListeningAsync(Uri endpoint, CancellationToken cancellationToken)
@@ -34,21 +42,5 @@ internal static class LocalCosmos
         {
             return false;
         }
-    }
-
-    private static Uri? EndpointOf(string? connectionString)
-    {
-        foreach (var part in (connectionString ?? string.Empty).Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
-        {
-            var separator = part.IndexOf('=', StringComparison.Ordinal);
-            if (separator > 0
-                && part[..separator].Trim().Equals("AccountEndpoint", StringComparison.OrdinalIgnoreCase)
-                && Uri.TryCreate(part[(separator + 1)..].Trim(), UriKind.Absolute, out var endpoint))
-            {
-                return endpoint;
-            }
-        }
-
-        return null;
     }
 }

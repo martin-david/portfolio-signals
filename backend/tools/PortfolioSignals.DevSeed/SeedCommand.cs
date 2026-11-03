@@ -1,3 +1,4 @@
+using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -58,7 +59,10 @@ internal static class SeedCommand
     private static async Task SeedAsync(SeedOptions options, TextWriter output, CancellationToken cancellationToken)
     {
         using var host = BuildHost();
-        var endpoint = LocalCosmos.RequireLocalEndpoint(host.Services.GetRequiredService<IOptions<CosmosOptions>>().Value);
+        LocalCosmos.RequireConnectionString(host.Services.GetRequiredService<IOptions<CosmosOptions>>().Value);
+
+        // Creating the client contacts nothing; it only resolves the endpoint, which is what gets judged before anything is written.
+        var endpoint = LocalCosmos.RequireLoopback(host.Services.GetRequiredService<CosmosClient>().Endpoint);
         if (!await LocalCosmos.IsListeningAsync(endpoint, cancellationToken))
         {
             throw new SeedException($"Nothing is listening on {endpoint.Host}:{endpoint.Port}. Start the Azure Cosmos DB Emulator and run the seeder again.");

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
+using Microsoft.Azure.Cosmos;
 using PortfolioSignals.Infrastructure.Cosmos;
 
 namespace PortfolioSignals.DevSeed.Tests;
@@ -7,8 +8,14 @@ namespace PortfolioSignals.DevSeed.Tests;
 public sealed class LocalCosmosTests
 {
     private const string DummyKey = "bm90LWEtcmVhbC1rZXk=";
+    private const string OtherAccount = "https://other-account.invalid:443/";
 
-    private static CosmosOptions WithConnectionString(string? connectionString) => new() { ConnectionString = connectionString };
+    /// <summary>The endpoint the Cosmos client resolves from a connection string. That is what the guard judges, so that is what these tests feed it.</summary>
+    private static Uri ResolvedEndpoint(string connectionString)
+    {
+        using var client = new CosmosClient(connectionString);
+        return client.Endpoint;
+    }
 
     [Theory]
     [InlineData("https://localhost:8081/")]
@@ -17,51 +24,53 @@ public sealed class LocalCosmosTests
     [InlineData("http://localhost:8081/")]
     public void The_emulator_on_this_machine_is_accepted(string endpoint)
     {
-        var options = WithConnectionString($"AccountEndpoint={endpoint};AccountKey={DummyKey}");
+        var resolved = ResolvedEndpoint($"AccountEndpoint={endpoint};AccountKey={DummyKey}");
 
-        LocalCosmos.RequireLocalEndpoint(options).Should().Be(new Uri(endpoint));
-    }
-
-    [Fact]
-    public void The_endpoint_is_found_wherever_it_sits_in_the_connection_string_and_however_it_is_spelled()
-    {
-        var options = WithConnectionString($" accountkey={DummyKey} ; ACCOUNTENDPOINT = https://localhost:8081/ ;");
-
-        LocalCosmos.RequireLocalEndpoint(options).Host.Should().Be("localhost");
+        LocalCosmos.RequireLoopback(resolved).Should().Be(new Uri(endpoint));
     }
 
     [Theory]
-    [InlineData("https://portfolio-signals.documents.azure.com:443/")]
+    [InlineData(OtherAccount)]
     [InlineData("https://localhost.example.com:8081/")]
     [InlineData("https://example.com/localhost")]
     [InlineData("https://10.0.0.5:8081/")]
     public void Any_other_account_is_refused_by_name(string endpoint)
     {
-        var options = WithConnectionString($"AccountEndpoint={endpoint};AccountKey={DummyKey}");
+        var resolved = ResolvedEndpoint($"AccountEndpoint={endpoint};AccountKey={DummyKey}");
 
-        var check = () => LocalCosmos.RequireLocalEndpoint(options);
+        var check = () => LocalCosmos.RequireLoopback(resolved);
 
         check.Should().Throw<SeedException>().WithMessage("*on this machine*");
     }
 
     [Fact]
-    public void The_refusal_never_repeats_the_connection_string_or_its_key()
+    public void When_the_endpoint_is_given_twice_the_one_the_client_uses_is_judged()
     {
-        var options = WithConnectionString($"AccountEndpoint=https://portfolio-signals.documents.azure.com:443/;AccountKey={DummyKey}");
+        // The Cosmos client takes the last of two endpoints, so the first string reaches the other account although it starts with a local one.
+        var localThenRemote = ResolvedEndpoint($"AccountEndpoint=https://localhost:8081/;AccountEndpoint={OtherAccount};AccountKey={DummyKey}");
+        var remoteThenLocal = ResolvedEndpoint($"AccountEndpoint={OtherAccount};AccountEndpoint=https://localhost:8081/;AccountKey={DummyKey}");
 
-        var check = () => LocalCosmos.RequireLocalEndpoint(options);
+        var first = () => LocalCosmos.RequireLoopback(localThenRemote);
 
-        check.Should().Throw<SeedException>().Which.Message.Should().NotContain(DummyKey).And.NotContain("AccountKey");
+        first.Should().Throw<SeedException>().WithMessage("*other-account.invalid*");
+        LocalCosmos.RequireLoopback(remoteThenLocal).Host.Should().Be("localhost");
+    }
+
+    [Theory]
+    [InlineData(" accountkey=" + DummyKey + " ; ACCOUNTENDPOINT = https://localhost:8081/ ;")]
+    [InlineData("AccountEndpoint=\"https://localhost:8081/\";AccountKey=" + DummyKey)]
+    public void The_endpoint_is_found_however_the_connection_string_is_spelled(string connectionString)
+    {
+        LocalCosmos.RequireLoopback(ResolvedEndpoint(connectionString)).Host.Should().Be("localhost");
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    [InlineData("AccountKey=abc")]
-    [InlineData("AccountEndpoint=not a uri;AccountKey=abc")]
-    public void A_connection_string_without_a_usable_endpoint_is_refused(string? connectionString)
+    [InlineData("   ")]
+    public void A_configuration_without_a_connection_string_is_refused(string? connectionString)
     {
-        var check = () => LocalCosmos.RequireLocalEndpoint(WithConnectionString(connectionString));
+        var check = () => LocalCosmos.RequireConnectionString(new CosmosOptions { ConnectionString = connectionString });
 
         check.Should().Throw<SeedException>().WithMessage("*Cosmos:ConnectionString*");
     }
@@ -69,11 +78,17 @@ public sealed class LocalCosmosTests
     [Fact]
     public void An_account_reached_by_endpoint_and_token_is_refused_even_though_its_name_is_local()
     {
-        var options = new CosmosOptions { Endpoint = "https://localhost:8081/" };
-
-        var check = () => LocalCosmos.RequireLocalEndpoint(options);
+        var check = () => LocalCosmos.RequireConnectionString(new CosmosOptions { Endpoint = "https://localhost:8081/" });
 
         check.Should().Throw<SeedException>();
+    }
+
+    [Fact]
+    public void A_connection_string_is_accepted()
+    {
+        var check = () => LocalCosmos.RequireConnectionString(new CosmosOptions { ConnectionString = $"AccountEndpoint=https://localhost:8081/;AccountKey={DummyKey}" });
+
+        check.Should().NotThrow();
     }
 
     [Fact]
