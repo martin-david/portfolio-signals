@@ -59,7 +59,10 @@ export function AppNavigator({ fontsReady, onReady }: { fontsReady: boolean; onR
         <LoadingScreen />
       ) : phase === 'opening-account' ? (
         <PlainFrame>
-          <LoadingScreen label="Opening your account" />
+          <LoadingScreen
+            label="Opening your account"
+            slowHint="Still waiting for the server. If it has been idle, it can take a little while to start."
+          />
         </PlainFrame>
       ) : phase === 'account-error' ? (
         <PlainFrame>
