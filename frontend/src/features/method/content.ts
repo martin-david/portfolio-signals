@@ -220,7 +220,7 @@ export const WARNING_NOTE =
 export const WHAT_IS_MISSING: readonly string[] = [
   'Your tax position, time horizon, risk tolerance and other assets.',
   'TipRanks data for copy trading, funds and crypto. Copy trading shows in the account strip as not assessed; funds and crypto are marked No data.',
-  'The bull and bear case, the latest catalyst, deep fundamentals, the macro calendar and dividends. The API does not provide them yet, and the app does not make them up.',
+  'The bull and bear case, the latest catalyst, deep fundamentals, the macro calendar and dividend history. The API does not provide them yet, and the app does not make them up.',
   'Trading and rebalancing. The app reads your eToro account and never places an order.',
 ];
 

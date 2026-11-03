@@ -30,7 +30,7 @@ Not a market-data terminal and not advice. A verdict sheet for the user's own po
 
 - One React Native (Expo) codebase for web and Android now, iOS later; Material 3 through React Native Paper, themed with this product's tokens.
 - Verdicts are Hold, Hold with review of size, Watch, Review and No data. Review means look again, not sell. Crypto has no TipRanks coverage and is No data.
-- Not available from the API yet and not to be faked: bull and bear case, latest catalyst, deep fundamentals, macro calendar, dividends, rebalancing suggestions, trading.
+- Not available from the API yet and not to be faked: bull and bear case, latest catalyst, deep fundamentals, macro calendar, dividend history (the yield and P/E ratio are served and shown), rebalancing suggestions, trading.
 - Plans control sync frequency; no plan guarantees real-time data. Plan changes and billing do not exist yet.
 - Undecided: identity provider and tenant, brand name and logo beyond the working title, dark theme, iOS timing.
 

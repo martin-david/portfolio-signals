@@ -68,11 +68,20 @@ curl -H "X-Dev-User: me" -X PUT http://localhost:5196/api/v1/me -H "Content-Type
 
 The in-memory credential store is per process, so a sync run by the Functions app needs a real Key Vault (`CredentialStore:KeyVaultUri`) shared by both. Copy [local.settings.sample.json](src/PortfolioSignals.Functions/local.settings.sample.json) to `local.settings.json` (git-ignored) and fill in the values to run the Functions app.
 
+### Using it from the frontend
+
+The [frontend](../frontend/README.md) is written against the published OpenAPI document and runs against this API in development:
+
+- **CORS.** Browsers may only call the API from origins listed in `Cors:AllowedOrigins`. The Development settings allow the frontend's dev server, `http://localhost:8082`; set `Cors__AllowedOrigins__0` (then `__1`, and so on) to allow others. With none configured no cross-origin browser request is allowed. Native apps are not subject to CORS.
+- **Android emulator.** The emulator reaches the host's loopback at `10.0.2.2`, so the app is pointed at `http://10.0.2.2:5196`.
+- **The OpenAPI document needs no database.** `GET /openapi/v1.json` is served without authentication. To refresh the frontend's snapshot (`npm run api:fetch` in `frontend/`) when the Cosmos DB emulator is not running, start the API with `Cosmos__CreateIfNotExists=false`. Every other endpoint needs the database.
+
 ## Configuration
 
 | Setting | Purpose |
 | --- | --- |
 | `Authentication:Jwt:Authority`, `:Audience` | OpenID Connect issuer and audience for bearer tokens (required outside Development) |
+| `Cors:AllowedOrigins` | Browser origins allowed to call the API (Development allows the frontend's `http://localhost:8082`; none by default) |
 | `Cosmos:Endpoint` or `:ConnectionString` | Cosmos DB account (endpoint uses `DefaultAzureCredential`; the connection string is for the emulator) |
 | `CredentialStore:KeyVaultUri` | Key Vault holding provider credentials |
 | `SyncQueue:ServiceUri` or `:ConnectionString`, `:QueueName` | Storage queue that carries sync requests |

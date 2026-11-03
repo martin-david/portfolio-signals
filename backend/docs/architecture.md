@@ -98,6 +98,10 @@ timer (every 15 min)
 - `Authentication:Mode=Development` trusts an `X-Dev-User` header for local work and is refused outside the Development environment.
 - Azure resources are accessed with `DefaultAzureCredential` (managed identity in Azure), so the Cosmos DB account, Key Vault and Storage account need no keys in configuration. The identity needs Cosmos DB data contributor on the database, `get`/`set`/`delete`/`recover` on Key Vault secrets and queue data contributor on the sync queue.
 
+## Clients
+
+The [frontend](../../frontend/README.md) (Expo, for web and Android) is the first client. It is written against the OpenAPI document rather than against the code: `frontend/openapi/v1.json` is a snapshot of `/openapi/v1.json`, and its TypeScript types are generated from that snapshot, so a change to the wire format surfaces there as a compile error and as a failing `npm run api:check`. This is why the document has to describe the wire format exactly (enums as names, numbers as numbers, nullable properties always present), which the contract tests in `PortfolioSignals.Api.Tests` hold to. Browsers may only call the API from the origins in `Cors:AllowedOrigins`; native apps are not subject to CORS.
+
 ## Not in scope yet
 
-Subscription billing and plan changes (everyone starts on Free; `ChangePlan` exists on the aggregate), feature flags, health checks for dependencies, rate limiting beyond the manual-sync cooldown, infrastructure-as-code, a TypeScript client generated from `/openapi/v1.json`, and any trading capability.
+Subscription billing and plan changes (everyone starts on Free; `ChangePlan` exists on the aggregate), feature flags, health checks for dependencies, rate limiting beyond the manual-sync cooldown, infrastructure-as-code, and any trading capability. Not served by the API yet, and so not shown by the frontend: the bull and bear case, latest catalyst, deep fundamentals, macro calendar and dividend history that the prototype's report had, and TipRanks data for copy-trading portfolios.
