@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <!-- Shared with the API, so a connection string set there with "dotnet user-secrets" applies to the seeder too. -->
+    <UserSecretsId>portfolio-signals-api</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PortfolioSignals.Application\PortfolioSignals.Application.csproj" />
+    <ProjectReference Include="..\..\src\PortfolioSignals.Infrastructure\PortfolioSignals.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The API's own settings, so the seeder reaches the same local Cosmos DB as the API without a second copy to keep in step. -->
+    <Content Include="..\..\src\PortfolioSignals.Api\appsettings.json" Link="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\src\PortfolioSignals.Api\appsettings.Development.json" Link="appsettings.Development.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="PortfolioSignals.DevSeed.Tests" />
+  </ItemGroup>
+
+</Project>

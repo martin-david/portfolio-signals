@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,11 +30,8 @@ builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-});
+builder.Services.AddControllers().AddJsonOptions(options => ApiJson.Configure(options.JsonSerializerOptions));
+builder.Services.ConfigureHttpJsonOptions(options => ApiJson.Configure(options.SerializerOptions));
 builder.Services.AddOpenApi(options =>
 {
     options.AddDocumentTransformer((document, _, _) =>
@@ -121,7 +117,14 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
-app.UseHttpsRedirection();
+
+// Browsers refuse to follow a redirect on a CORS preflight, and the Android emulator reaches the API over plain http,
+// so a local API answers on its http port as it is. Everywhere else http is redirected to https.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseCors();
 app.UseSwaggerUI(options =>
 {

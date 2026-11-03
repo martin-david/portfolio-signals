@@ -1,0 +1,73 @@
+{
+  "name": "portfolio-signals-frontend",
+  "version": "0.1.0",
+  "description": "Portfolio Signals app: React Native (Expo) for web and Android",
+  "main": "expo-router/entry",
+  "dependencies": {
+    "@expo-google-fonts/barlow-semi-condensed": "^0.4.1",
+    "@expo/vector-icons": "^15.0.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@tanstack/react-query": "^5.104.5",
+    "expo": "~58.0.22",
+    "expo-auth-session": "~58.0.16",
+    "expo-constants": "~58.0.13",
+    "expo-crypto": "~58.0.7",
+    "expo-font": "~58.0.9",
+    "expo-linking": "~58.0.15",
+    "expo-router": "~58.0.29",
+    "expo-secure-store": "~58.0.2",
+    "expo-splash-screen": "~58.0.12",
+    "expo-status-bar": "~58.0.4",
+    "expo-system-ui": "~58.0.7",
+    "expo-web-browser": "~58.0.7",
+    "openapi-fetch": "^0.17.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-native": "0.88.1",
+    "react-native-paper": "^5.15.3",
+    "react-native-safe-area-context": "~5.10.1",
+    "react-native-screens": "~4.30.1",
+    "react-native-svg": "15.16.0",
+    "react-native-web": "~0.21.4"
+  },
+  "devDependencies": {
+    "@testing-library/react-native": "^14.1.0",
+    "@types/jest": "30.0.0",
+    "@types/react": "~19.3.0",
+    "cross-env": "^10.1.0",
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "^58.0.4",
+    "jest": "~30.5.2",
+    "jest-expo": "~58.0.13",
+    "openapi-typescript": "^7.13.0",
+    "prettier": "^3.9.10",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start --port 8082",
+    "web": "expo start --web --port 8082",
+    "web:mock": "cross-env EXPO_PUBLIC_API_MODE=mock expo start --web --port 8082",
+    "web:mock:empty": "cross-env EXPO_PUBLIC_API_MODE=mock EXPO_PUBLIC_MOCK_SCENARIO=empty expo start --web --port 8082",
+    "android": "expo start --android --port 8082",
+    "android:mock": "cross-env EXPO_PUBLIC_API_MODE=mock expo start --android --port 8082",
+    "ios": "expo start --ios --port 8082",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "test:ci": "jest --ci --coverage",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "api:fetch": "node scripts/fetch-openapi.mjs",
+    "api:generate": "node scripts/generate-api-types.mjs",
+    "api:check": "node scripts/generate-api-types.mjs --check",
+    "build:web": "expo export --platform web",
+    "build:android": "expo export --platform android",
+    "check": "npm run lint && npm run typecheck && npm run test && npm run api:check"
+  },
+  "overrides": {
+    "openapi-typescript": {
+      "typescript": "$typescript"
+    }
+  },
+  "private": true
+}
