@@ -117,7 +117,14 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
-app.UseHttpsRedirection();
+
+// Browsers refuse to follow a redirect on a CORS preflight, and the Android emulator reaches the API over plain http,
+// so a local API answers on its http port as it is. Everywhere else http is redirected to https.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseCors();
 app.UseSwaggerUI(options =>
 {
