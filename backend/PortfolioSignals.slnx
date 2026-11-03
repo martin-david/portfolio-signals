@@ -16,11 +16,15 @@
     <Project Path="src/PortfolioSignals.Api/PortfolioSignals.Api.csproj" />
     <Project Path="src/PortfolioSignals.Functions/PortfolioSignals.Functions.csproj" />
   </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/PortfolioSignals.DevSeed/PortfolioSignals.DevSeed.csproj" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/PortfolioSignals.TestSupport/PortfolioSignals.TestSupport.csproj" />
     <Project Path="tests/PortfolioSignals.Domain.Tests/PortfolioSignals.Domain.Tests.csproj" />
     <Project Path="tests/PortfolioSignals.Application.Tests/PortfolioSignals.Application.Tests.csproj" />
     <Project Path="tests/PortfolioSignals.Infrastructure.Tests/PortfolioSignals.Infrastructure.Tests.csproj" />
     <Project Path="tests/PortfolioSignals.Api.Tests/PortfolioSignals.Api.Tests.csproj" />
+    <Project Path="tests/PortfolioSignals.DevSeed.Tests/PortfolioSignals.DevSeed.Tests.csproj" />
   </Folder>
 </Solution>
